@@ -7,6 +7,7 @@ This folder now has both the simple V1 local tool and the better V2 shared CRM d
 - `clinic-outreach-v2.html` -> V2 shared CRM-ready internal software
 - `supabase-schema.sql` -> database schema for V2
 - `supabase-config.example.js` -> private config template for easiest setup
+- `backend/` -> private Apify proxy so the token stays off the dashboard
 - `V2-SETUP.md` -> V2 setup guide
 - `CLINIC-OUTREACH-APPS-SCRIPT.js` -> Google Sheets version if needed later
 - `CLINIC-OUTREACH-SHEET-SETUP.md` -> setup guide for sheet workflow
@@ -24,7 +25,7 @@ This folder now has both the simple V1 local tool and the better V2 shared CRM d
 2. Run `supabase-schema.sql`
 3. Open `clinic-outreach-v2.html`
 4. Supabase URL and anon key are already baked into this workspace build
-5. Add only the Apify API token if you want one-click lead finding
+5. Start the private backend once with your Apify token in `backend/.env`
 6. Open the app and use the lead finder or import CSV
 7. Start managing leads
 
@@ -36,6 +37,7 @@ This folder now has both the simple V1 local tool and the better V2 shared CRM d
 - direct WhatsApp open links
 - built-in Apify lead finder from place + business type
 - workspace-level Supabase auto boot without manual URL or anon entry
+- Apify token kept in private backend instead of the visible dashboard
 - still static and easy to host
 
 ## Best for now

@@ -15,6 +15,8 @@ This is the cleaner internal software version.
 - `clinic-outreach-v2.html`
 - `supabase-schema.sql`
 - `supabase-config.example.js`
+- `backend/server.js`
+- `backend/.env.example`
 
 ## Setup in 10 minutes
 
@@ -41,23 +43,23 @@ The project URL is already prefilled in the app:
 
 The Supabase anon key is already baked into this workspace build.
 
-### 4. Best setup method: local private config file
-- Copy `supabase-config.example.js`
-- Rename it to `supabase-config.local.js`
-- Paste your Apify API token there
-- Keep workspace slug as `dikhao-clinics`
-- Open `clinic-outreach-v2.html` in browser
+### 4. Best setup method: private backend for Apify
+- Open `backend/.env.example`
+- copy it to `backend/.env`
+- paste your Apify API token there
+- in `backend/`, run `npm install`
+- then run `npm start`
+- keep that backend running on `http://localhost:8787`
+- open `clinic-outreach-v2.html` in browser
 
-### 5. Fallback manual method
+### 5. Workspace settings
 - Open `clinic-outreach-v2.html` in browser
-- Click `Supabase setup`
-- Paste the Apify API token if you want auto lead-finding
-- keep the prefilled project URL unless you want to switch projects
-- Keep workspace slug as `dikhao-clinics` unless you want separate workspaces
-- Click `Save and connect`
+- Supabase URL and anon key are already baked in
+- keep workspace slug as `dikhao-clinics` unless you want separate workspaces
+- use the settings modal only if you want to change the workspace
 
 ### 6. Start using
-- use the lead finder with place + business type to pull leads automatically
+- use the lead finder with place + business type to pull leads automatically through the private backend
 - or import CSV leads
 - or add leads manually
 - click a lead name to open detail panel

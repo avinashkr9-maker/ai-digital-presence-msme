@@ -657,7 +657,7 @@
     <div class="config-banner" id="configBanner">
       <div>
         <strong id="modeLabel">Workspace booting...</strong>
-        <div class="mini">Supabase is now baked into the workspace. The only thing you may still need once is your Apify token for one-click lead finding.</div>
+        <div class="mini">Supabase is baked in. One-click lead finding now works through a private backend proxy so the Apify token does not sit in the dashboard.</div>
       </div>
       <button class="btn btn-primary" id="connectBtn">Workspace settings</button>
     </div>
@@ -825,9 +825,9 @@
         <div class="mini">Already baked into this workspace so you do not have to enter it manually.</div>
       </div>
       <div class="field">
-        <label>Apify API Token</label>
-        <textarea id="apifyToken" placeholder="Paste Apify API token for auto lead finder"></textarea>
-        <div class="mini">This is the only remaining token you may need to paste once, unless you want me to hardwire your real Apify token too.</div>
+        <label>Lead finder backend</label>
+        <input value="http://localhost:8787/api/find-leads" readonly />
+        <div class="mini">Start the private backend once and the Apify token stays there, not in the dashboard.</div>
       </div>
       <div class="field">
         <label>Workspace slug</label>
@@ -871,9 +871,6 @@
       const defaults = {
         url: 'https://hawdlljwbjgdnjlqniqn.supabase.co',
         anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhhd2RsbGp3YmpnZG5qbHFuaXFuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUyODEyNDUsImV4cCI6MjA5MDg1NzI0NX0.Z01OA6cPSlzM25OkfDfV7z1C3c-1DGtQ6QQYhpEEr9Y',
-        apifyToken: '',
-        apifyActorId: 'compass/crawler-google-places',
-        apifyTaskId: '',
         workspace: 'dikhao-clinics'
       };
       const localScriptConfig = window.DIKHAO_SUPABASE_CONFIG || window.DIKHAO_PRIVATE_CONFIG || {};
@@ -1124,78 +1121,46 @@
         alert('Please add a place first.');
         return;
       }
-      if (!state.config.apifyToken) {
-        alert('Add your Apify API token in Supabase setup or the private local config file first.');
-        openConfig();
-        return;
-      }
 
       const query = buildLeadFinderQuery(place, category, keyword);
-      statusEl.textContent = `Running Apify for ${query}...`;
+      statusEl.textContent = `Running private lead finder for ${query}...`;
       document.getElementById('finderBtn').disabled = true;
 
       try {
-        const actorId = state.config.apifyActorId || 'compass/crawler-google-places';
-        const runResponse = await fetch(`https://api.apify.com/v2/acts/${encodeURIComponent(actorId)}/runs?token=${encodeURIComponent(state.config.apifyToken)}`, {
+        const runResponse = await fetch('http://localhost:8787/api/find-leads', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
-            searchStringsArray: [query],
-            maxCrawledPlacesPerSearch: limit,
-            language: 'en',
-            region: 'IN',
-            skipClosedPlaces: true,
-            exportPlaceUrls: true
+            place,
+            category,
+            keyword,
+            limit
           })
         });
 
         const runData = await runResponse.json();
         if (!runResponse.ok) {
-          throw new Error(runData.error?.message || 'Could not start Apify actor');
+          throw new Error(runData.error || 'Could not start lead finder backend');
         }
 
-        const runId = runData.data?.id;
-        if (!runId) throw new Error('Apify run ID missing');
-
-        let attempts = 0;
-        let status = runData.data?.status || 'RUNNING';
-        while (!['SUCCEEDED', 'FAILED', 'ABORTED', 'TIMED-OUT'].includes(status) && attempts < 40) {
-          attempts += 1;
-          statusEl.textContent = `Apify is collecting leads for ${query}...`;
-          await sleep(3000);
-          const pollResponse = await fetch(`https://api.apify.com/v2/actor-runs/${encodeURIComponent(runId)}?token=${encodeURIComponent(state.config.apifyToken)}`);
-          const pollData = await pollResponse.json();
-          status = pollData.data?.status || status;
-        }
-
-        if (status !== 'SUCCEEDED') {
-          throw new Error(`Apify run ended with status: ${status}`);
-        }
-
-        const itemsResponse = await fetch(`https://api.apify.com/v2/actor-runs/${encodeURIComponent(runId)}/dataset/items?token=${encodeURIComponent(state.config.apifyToken)}&clean=true&format=json`);
-        const items = await itemsResponse.json();
-        if (!itemsResponse.ok) {
-          throw new Error(items.error?.message || 'Could not fetch Apify results');
-        }
-
-        const leads = (items || [])
+        const leads = (runData.items || [])
           .map(item => normalizeApifyLead(item, place, category, query))
           .filter(lead => lead.business_name);
 
         if (!leads.length) {
-          throw new Error('No leads returned from Apify for this query');
+          throw new Error('No leads returned from the backend for this query');
         }
 
         await batchImport(leads);
         if (leads[0]) state.selectedLeadId = leads[0].id;
-        statusEl.textContent = `${leads.length} leads added from Apify for ${query}. Message drafts are ready.`;
+        statusEl.textContent = `${leads.length} leads added for ${query}. Message drafts are ready.`;
         render();
       } catch (error) {
         console.error(error);
         statusEl.textContent = `Could not fetch leads: ${error.message}`;
-        alert(`Lead finder failed: ${error.message}`);
+        alert(`Lead finder failed: ${error.message}. Make sure the private backend is running on localhost:8787.`);
       } finally {
         document.getElementById('finderBtn').disabled = false;
       }
@@ -1622,7 +1587,6 @@
     function openConfig() {
       document.getElementById('supabaseUrl').value = state.config.url || '';
       document.getElementById('supabaseAnonKey').value = state.config.anonKey || '';
-      document.getElementById('apifyToken').value = state.config.apifyToken || '';
       document.getElementById('workspaceSlug').value = state.config.workspace || 'dikhao-clinics';
       document.getElementById('configModal').classList.add('open');
     }
@@ -1635,9 +1599,6 @@
       state.config = {
         url: document.getElementById('supabaseUrl').value.trim(),
         anonKey: document.getElementById('supabaseAnonKey').value.trim(),
-        apifyToken: document.getElementById('apifyToken').value.trim(),
-        apifyActorId: state.config.apifyActorId || 'compass/crawler-google-places',
-        apifyTaskId: state.config.apifyTaskId || '',
         workspace: document.getElementById('workspaceSlug').value.trim() || 'dikhao-clinics'
       };
       saveConfig();
@@ -1650,9 +1611,6 @@
       state.config = {
         url: document.getElementById('supabaseUrl').value.trim(),
         anonKey: document.getElementById('supabaseAnonKey').value.trim(),
-        apifyToken: document.getElementById('apifyToken').value.trim(),
-        apifyActorId: state.config.apifyActorId || 'compass/crawler-google-places',
-        apifyTaskId: state.config.apifyTaskId || '',
         workspace: document.getElementById('workspaceSlug').value.trim() || 'dikhao-clinics'
       };
       saveConfig();
