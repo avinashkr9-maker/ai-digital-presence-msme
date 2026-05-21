@@ -22,7 +22,7 @@ This folder now has both the simple V1 local tool and the better V2 shared CRM d
 1. Create Supabase project
 2. Run `supabase-schema.sql`
 3. Open `clinic-outreach-v2.html`
-4. Add Supabase URL + anon key
+4. Add the anon key only. The Supabase project URL is already prefilled.
 5. Start importing and managing leads
 
 ## Why V2 is better

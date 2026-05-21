@@ -325,7 +325,7 @@
     <div class="config-banner" id="configBanner">
       <div>
         <strong id="modeLabel">Mode: Local demo mode</strong>
-        <div class="mini">Add Supabase URL + anon key to turn this into a shared internal CRM.</div>
+        <div class="mini">Supabase project URL is prefilled. Just add the anon key to turn this into a shared internal CRM.</div>
       </div>
       <button class="btn btn-primary" id="connectBtn">Connect Supabase</button>
     </div>
@@ -428,7 +428,7 @@
       <h2 class="section-title">Supabase setup</h2>
       <div class="field">
         <label>Supabase URL</label>
-        <input id="supabaseUrl" placeholder="https://your-project.supabase.co" />
+        <input id="supabaseUrl" placeholder="https://your-project.supabase.co" value="https://hawdlljwbjgdnjlqniqn.supabase.co" />
       </div>
       <div class="field">
         <label>Supabase Anon Key</label>
@@ -437,6 +437,7 @@
       <div class="field">
         <label>Workspace slug</label>
         <input id="workspaceSlug" placeholder="dikhao-clinics" value="dikhao-clinics" />
+        <div class="mini">Default project URL: https://hawdlljwbjgdnjlqniqn.supabase.co</div>
         <div class="mini">Useful if you want separate workspaces later.</div>
       </div>
       <div class="split-actions">
@@ -472,8 +473,8 @@
     };
 
     function loadConfig() {
-      try { return JSON.parse(localStorage.getItem(STORAGE_KEYS.config)) || { url: '', anonKey: '', workspace: 'dikhao-clinics' }; }
-      catch { return { url: '', anonKey: '', workspace: 'dikhao-clinics' }; }
+      try { return JSON.parse(localStorage.getItem(STORAGE_KEYS.config)) || { url: 'https://hawdlljwbjgdnjlqniqn.supabase.co', anonKey: '', workspace: 'dikhao-clinics' }; }
+      catch { return { url: 'https://hawdlljwbjgdnjlqniqn.supabase.co', anonKey: '', workspace: 'dikhao-clinics' }; }
     }
 
     function saveConfig() {

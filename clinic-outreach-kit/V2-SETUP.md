@@ -32,13 +32,16 @@ This creates:
 
 ### 3. Get project credentials
 From Supabase project settings copy:
-- Project URL
 - anon public key
+
+The project URL is already prefilled in the app:
+- `https://hawdlljwbjgdnjlqniqn.supabase.co`
 
 ### 4. Open the app
 - Open `clinic-outreach-v2.html` in browser
 - Click `Supabase setup`
-- Paste URL and anon key
+- Paste the anon key
+- keep the prefilled project URL unless you want to switch projects
 - Keep workspace slug as `dikhao-clinics` unless you want separate workspaces
 - Click `Save and connect`
 
