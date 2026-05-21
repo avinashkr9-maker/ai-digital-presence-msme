@@ -87,7 +87,7 @@
       <h1>Business Onboarding Form</h1>
       <p>Share your business details and we will help set up your website, Google Business support, WhatsApp catalog support, and digital presence workflow.</p>
 
-      <form>
+      <form id="businessOnboardingForm">
         <div class="section-title">Basic business details</div>
         <div class="grid">
           <div class="field">
@@ -193,9 +193,38 @@
         </div>
 
         <button class="btn" type="submit">Submit Business Details</button>
-        <div class="note">This is the first working form layout. It can later be connected to Google Forms, Sheets, Airtable, or a custom backend.</div>
+        <div class="note">This form is ready for a Google Apps Script, SheetDB, Tally, or custom endpoint. Set the endpoint inside the script before public use.</div>
       </form>
     </div>
   </div>
+  <script>
+    const FORM_ENDPOINT = "";
+    const form = document.getElementById("businessOnboardingForm");
+    form.addEventListener("submit", async function (event) {
+      event.preventDefault();
+      const data = Object.fromEntries(new FormData(form).entries());
+
+      if (!FORM_ENDPOINT) {
+        alert("Form backend is not connected yet. The form UI is ready, but the submission endpoint still needs to be added.");
+        console.log("Form payload preview", data);
+        return;
+      }
+
+      try {
+        const response = await fetch(FORM_ENDPOINT, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data)
+        });
+
+        if (!response.ok) throw new Error("Submission failed");
+        alert("Business details submitted successfully.");
+        form.reset();
+      } catch (error) {
+        alert("Submission failed. Please try again.");
+        console.error(error);
+      }
+    });
+  </script>
 </body>
 </html>
