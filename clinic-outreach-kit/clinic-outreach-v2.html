@@ -663,9 +663,9 @@
         <textarea id="supabaseAnonKey" placeholder="Paste anon key"></textarea>
       </div>
       <div class="field">
-        <label>Google Maps / Places API Key</label>
-        <textarea id="googleMapsApiKey" placeholder="Paste Google Places API key for auto lead finder"></textarea>
-        <div class="mini">Needed only for the auto lead-finder button.</div>
+        <label>Apify API Token</label>
+        <textarea id="apifyToken" placeholder="Paste Apify API token for auto lead finder"></textarea>
+        <div class="mini">Needed for the one-click lead finder inside the CRM.</div>
       </div>
       <div class="field">
         <label>Workspace slug</label>
@@ -709,7 +709,9 @@
       const defaults = {
         url: 'https://hawdlljwbjgdnjlqniqn.supabase.co',
         anonKey: '',
-        mapsApiKey: '',
+        apifyToken: '',
+        apifyActorId: 'compass/crawler-google-places',
+        apifyTaskId: '',
         workspace: 'dikhao-clinics'
       };
       const localScriptConfig = window.DIKHAO_SUPABASE_CONFIG || window.DIKHAO_PRIVATE_CONFIG || {};
@@ -905,6 +907,50 @@
       return parts[0] || city || '';
     }
 
+    function sleep(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    function pickFirst(...values) {
+      for (const value of values) {
+        if (value !== undefined && value !== null && String(value).trim() !== '') return value;
+      }
+      return '';
+    }
+
+    function normalizeApifyLead(item, place, category, query) {
+      const name = pickFirst(item.title, item.name, item.businessName, item.companyName);
+      const address = pickFirst(item.address, item.fullAddress, item.streetAddress, item.formattedAddress);
+      const phone = pickFirst(item.phone, item.phoneNumber, item.phoneUnformatted, item.contactPhone);
+      const website = pickFirst(item.website, item.websiteUrl, item.domain, item.url);
+      const mapsUrl = pickFirst(item.url, item.googleMapsUrl, item.placeUrl, item.mapsUrl);
+      const rating = pickFirst(item.totalScore, item.rating, item.stars);
+      const reviewsCount = pickFirst(item.reviewsCount, item.reviews, item.totalReviewsCount, item.reviewCount);
+      const categoryLabel = pickFirst(item.categoryName, item.category, item.primaryCategory, category);
+      const uniqueId = pickFirst(item.placeId, item.cid, item.id, `${name}-${address}`)
+        .toString()
+        .replace(/[^a-zA-Z0-9_-]/g, '-')
+        .slice(0, 80);
+
+      return scoreLead({
+        id: `APIFY-${uniqueId}`,
+        business_name: name,
+        category: categoryLabel || category,
+        phone,
+        website,
+        city: place,
+        locality: extractLocality(address, place),
+        source: 'Apify Finder',
+        standalone_flag: 'Yes',
+        simple_offer_flag: 'Yes',
+        address,
+        maps_url: mapsUrl,
+        rating,
+        reviews_count: reviewsCount,
+        notes: `Auto-found from Apify query: ${query}`
+      });
+    }
+
     async function runLeadFinder() {
       const place = document.getElementById('finderPlace').value.trim();
       const category = document.getElementById('finderCategory').value.trim() || 'Clinic';
@@ -916,58 +962,73 @@
         alert('Please add a place first.');
         return;
       }
-      if (!state.config.mapsApiKey) {
-        alert('Add a Google Maps / Places API key in Supabase setup or the private local config file first.');
+      if (!state.config.apifyToken) {
+        alert('Add your Apify API token in Supabase setup or the private local config file first.');
         openConfig();
         return;
       }
 
       const query = buildLeadFinderQuery(place, category, keyword);
-      statusEl.textContent = `Searching ${query}...`;
+      statusEl.textContent = `Running Apify for ${query}...`;
       document.getElementById('finderBtn').disabled = true;
 
       try {
-        const response = await fetch('https://places.googleapis.com/v1/places:searchText', {
+        const actorId = state.config.apifyActorId || 'compass/crawler-google-places';
+        const runResponse = await fetch(`https://api.apify.com/v2/acts/${encodeURIComponent(actorId)}/runs?token=${encodeURIComponent(state.config.apifyToken)}`, {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/json',
-            'X-Goog-Api-Key': state.config.mapsApiKey,
-            'X-Goog-FieldMask': 'places.id,places.displayName,places.formattedAddress,places.nationalPhoneNumber,places.websiteUri,places.googleMapsUri,places.rating,places.userRatingCount,places.primaryTypeDisplayName'
+            'Content-Type': 'application/json'
           },
           body: JSON.stringify({
-            textQuery: query,
-            maxResultCount: limit,
-            regionCode: 'IN'
+            searchStringsArray: [query],
+            maxCrawledPlacesPerSearch: limit,
+            language: 'en',
+            region: 'IN',
+            skipClosedPlaces: true,
+            exportPlaceUrls: true
           })
         });
 
-        const data = await response.json();
-        if (!response.ok) {
-          throw new Error(data.error?.message || 'Lead finder failed');
+        const runData = await runResponse.json();
+        if (!runResponse.ok) {
+          throw new Error(runData.error?.message || 'Could not start Apify actor');
         }
 
-        const places = data.places || [];
-        const leads = places.map(placeItem => scoreLead({
-          id: `GPLACE-${placeItem.id}`,
-          business_name: placeItem.displayName?.text || '',
-          category: placeItem.primaryTypeDisplayName?.text || category,
-          phone: placeItem.nationalPhoneNumber || '',
-          website: placeItem.websiteUri || '',
-          city: place,
-          locality: extractLocality(placeItem.formattedAddress, place),
-          source: 'Google Places Finder',
-          standalone_flag: 'Yes',
-          simple_offer_flag: 'Yes',
-          address: placeItem.formattedAddress || '',
-          maps_url: placeItem.googleMapsUri || '',
-          rating: placeItem.rating || '',
-          reviews_count: placeItem.userRatingCount || '',
-          notes: `Auto-found from query: ${query}`
-        })).filter(lead => lead.business_name);
+        const runId = runData.data?.id;
+        if (!runId) throw new Error('Apify run ID missing');
+
+        let attempts = 0;
+        let status = runData.data?.status || 'RUNNING';
+        while (!['SUCCEEDED', 'FAILED', 'ABORTED', 'TIMED-OUT'].includes(status) && attempts < 40) {
+          attempts += 1;
+          statusEl.textContent = `Apify is collecting leads for ${query}...`;
+          await sleep(3000);
+          const pollResponse = await fetch(`https://api.apify.com/v2/actor-runs/${encodeURIComponent(runId)}?token=${encodeURIComponent(state.config.apifyToken)}`);
+          const pollData = await pollResponse.json();
+          status = pollData.data?.status || status;
+        }
+
+        if (status !== 'SUCCEEDED') {
+          throw new Error(`Apify run ended with status: ${status}`);
+        }
+
+        const itemsResponse = await fetch(`https://api.apify.com/v2/actor-runs/${encodeURIComponent(runId)}/dataset/items?token=${encodeURIComponent(state.config.apifyToken)}&clean=true&format=json`);
+        const items = await itemsResponse.json();
+        if (!itemsResponse.ok) {
+          throw new Error(items.error?.message || 'Could not fetch Apify results');
+        }
+
+        const leads = (items || [])
+          .map(item => normalizeApifyLead(item, place, category, query))
+          .filter(lead => lead.business_name);
+
+        if (!leads.length) {
+          throw new Error('No leads returned from Apify for this query');
+        }
 
         await batchImport(leads);
         if (leads[0]) state.selectedLeadId = leads[0].id;
-        statusEl.textContent = `${leads.length} leads added from ${query}. Message drafts are ready.`;
+        statusEl.textContent = `${leads.length} leads added from Apify for ${query}. Message drafts are ready.`;
         render();
       } catch (error) {
         console.error(error);
@@ -1399,7 +1460,7 @@
     function openConfig() {
       document.getElementById('supabaseUrl').value = state.config.url || '';
       document.getElementById('supabaseAnonKey').value = state.config.anonKey || '';
-      document.getElementById('googleMapsApiKey').value = state.config.mapsApiKey || '';
+      document.getElementById('apifyToken').value = state.config.apifyToken || '';
       document.getElementById('workspaceSlug').value = state.config.workspace || 'dikhao-clinics';
       document.getElementById('configModal').classList.add('open');
     }
@@ -1412,7 +1473,9 @@
       state.config = {
         url: document.getElementById('supabaseUrl').value.trim(),
         anonKey: document.getElementById('supabaseAnonKey').value.trim(),
-        mapsApiKey: document.getElementById('googleMapsApiKey').value.trim(),
+        apifyToken: document.getElementById('apifyToken').value.trim(),
+        apifyActorId: state.config.apifyActorId || 'compass/crawler-google-places',
+        apifyTaskId: state.config.apifyTaskId || '',
         workspace: document.getElementById('workspaceSlug').value.trim() || 'dikhao-clinics'
       };
       saveConfig();
@@ -1425,7 +1488,9 @@
       state.config = {
         url: document.getElementById('supabaseUrl').value.trim(),
         anonKey: document.getElementById('supabaseAnonKey').value.trim(),
-        mapsApiKey: document.getElementById('googleMapsApiKey').value.trim(),
+        apifyToken: document.getElementById('apifyToken').value.trim(),
+        apifyActorId: state.config.apifyActorId || 'compass/crawler-google-places',
+        apifyTaskId: state.config.apifyTaskId || '',
         workspace: document.getElementById('workspaceSlug').value.trim() || 'dikhao-clinics'
       };
       saveConfig();

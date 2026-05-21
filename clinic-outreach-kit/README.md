@@ -24,7 +24,7 @@ This folder now has both the simple V1 local tool and the better V2 shared CRM d
 2. Run `supabase-schema.sql`
 3. Open `clinic-outreach-v2.html`
 4. Copy `supabase-config.example.js` to `supabase-config.local.js`
-5. Add the anon key and Google Places API key there
+5. Add the anon key and Apify API token there
 6. Open the app and use the lead finder or import CSV
 7. Start managing leads
 
@@ -34,7 +34,7 @@ This folder now has both the simple V1 local tool and the better V2 shared CRM d
 - notes and activity history
 - better status workflow
 - direct WhatsApp open links
-- built-in lead finder from place + business type
+- built-in Apify lead finder from place + business type
 - still static and easy to host
 
 ## Best for now
