@@ -290,6 +290,165 @@ select{appearance:none;cursor:pointer;background-image:url("data:image/svg+xml,%
 <script>
 let generatedData = null;
 
+const categoryMeta = {
+  clinic: {
+    label: 'Medical Clinic',
+    badge: city => `Trusted Clinic in ${city}`,
+    tagline: city => `Professional consultation and patient-friendly care for families in ${city}.`,
+    hours: 'Mon-Sat: 9:00 AM - 7:00 PM\nSunday: By appointment',
+    services: [
+      ['General Consultation', 'Professional consultation for day-to-day health concerns.', 'Call for pricing'],
+      ['Fever and Cold Care', 'Quick support for common illness and seasonal symptoms.', 'Call for pricing'],
+      ['Health Checkup', 'Basic health guidance and routine checkup support.', 'Call for pricing'],
+      ['Follow-up Visit', 'Easy follow-up care for returning patients.', 'Call for pricing']
+    ],
+    waServices: ['General Consultation', 'Fever and Cold Care', 'Health Checkup', 'Follow-up Visit', 'Appointment Support']
+  },
+  dental: {
+    label: 'Dental Clinic',
+    badge: city => `Trusted Dental Care in ${city}`,
+    tagline: city => `Gentle dental care, clean treatment, and easy appointment support in ${city}.`,
+    hours: 'Mon-Sat: 10:00 AM - 8:00 PM\nSunday: Closed',
+    services: [
+      ['Dental Consultation', 'Clear guidance for dental issues and oral care needs.', 'Call for pricing'],
+      ['Tooth Cleaning', 'Routine cleaning and preventive dental care support.', 'Call for pricing'],
+      ['Root Canal Support', 'Comfort-focused treatment planning and follow-up.', 'Call for pricing'],
+      ['Smile and Filling Care', 'Basic restorative and smile improvement services.', 'Call for pricing']
+    ],
+    waServices: ['Dental Consultation', 'Tooth Cleaning', 'Root Canal Support', 'Smile Care', 'Appointment Booking']
+  },
+  tutor: {
+    label: 'Coaching Center',
+    badge: city => `Trusted Coaching in ${city}`,
+    tagline: city => `Better learning, stronger basics, and confident student progress in ${city}.`,
+    hours: 'Mon-Sat: 8:00 AM - 8:00 PM\nSunday: Limited batches',
+    services: [
+      ['School Tuition', 'Clear teaching support for school subjects and revision.', 'Call for pricing'],
+      ['Exam Preparation', 'Structured guidance for boards and competitive exams.', 'Call for pricing'],
+      ['Small Batch Learning', 'Focused attention in smaller student groups.', 'Call for pricing'],
+      ['Doubt Clearing', 'Regular practice and concept strengthening support.', 'Call for pricing']
+    ],
+    waServices: ['School Tuition', 'Exam Preparation', 'Small Batches', 'Doubt Sessions', 'Admission Enquiry']
+  },
+  salon: {
+    label: 'Salon & Beauty Studio',
+    badge: city => `Professional Salon in ${city}`,
+    tagline: city => `Beauty, grooming, and self-care services that help you look and feel your best.`,
+    hours: 'Mon-Sat: 10:00 AM - 8:00 PM\nSunday: By appointment',
+    services: [
+      ['Haircut and Styling', 'Fresh cuts and styling support for everyday and special looks.', 'Call for pricing'],
+      ['Facial and Skin Care', 'Skin care services for regular beauty and glow support.', 'Call for pricing'],
+      ['Bridal and Event Makeup', 'Makeup services for special days and celebrations.', 'Call for pricing'],
+      ['Hair Treatment', 'Support for common hair care and treatment needs.', 'Call for pricing']
+    ],
+    waServices: ['Haircut and Styling', 'Facial and Skin Care', 'Bridal Makeup', 'Hair Treatment', 'Appointment Booking']
+  },
+  ca: {
+    label: 'CA Firm',
+    badge: city => `Trusted CA Firm in ${city}`,
+    tagline: city => `Simple tax, GST, and compliance support for individuals and businesses in ${city}.`,
+    hours: 'Mon-Sat: 10:00 AM - 7:00 PM\nSunday: Closed',
+    services: [
+      ['Income Tax Filing', 'Reliable ITR support for individuals and business owners.', 'Call for pricing'],
+      ['GST Support', 'Registration, return filing, and practical GST help.', 'Call for pricing'],
+      ['Business Compliance', 'Clear support for recurring filing and compliance needs.', 'Call for pricing'],
+      ['Bookkeeping Assistance', 'Basic financial organization support for MSMEs.', 'Call for pricing']
+    ],
+    waServices: ['Income Tax Filing', 'GST Support', 'Business Compliance', 'Bookkeeping Help', 'Consultation Request']
+  },
+  gym: {
+    label: 'Gym & Fitness',
+    badge: city => `Fitness Support in ${city}`,
+    tagline: city => `A motivating fitness space for strength, stamina, and better daily routine.`,
+    hours: 'Mon-Sat: 6:00 AM - 10:00 PM\nSunday: 7:00 AM - 1:00 PM',
+    services: [
+      ['General Fitness Training', 'Workout support for everyday fitness and consistency.', 'Call for pricing'],
+      ['Weight Loss Support', 'Structured fitness guidance for better routine and results.', 'Call for pricing'],
+      ['Strength Training', 'Focused support for strength and stamina building.', 'Call for pricing'],
+      ['Personal Training', 'One-to-one support for specific fitness goals.', 'Call for pricing']
+    ],
+    waServices: ['General Fitness', 'Weight Loss Support', 'Strength Training', 'Personal Training', 'Membership Enquiry']
+  },
+  restaurant: {
+    label: 'Restaurant',
+    badge: city => `Popular Restaurant in ${city}`,
+    tagline: city => `Fresh food, easy ordering, and a better dining presence for local customers.`,
+    hours: 'Daily: 11:00 AM - 11:00 PM',
+    services: [
+      ['Dine-in Experience', 'Comfortable dining with quality food and service.', 'Call for pricing'],
+      ['Takeaway Orders', 'Quick takeaway support for busy customers.', 'Call for pricing'],
+      ['Family Meals', 'Meal options for families and groups.', 'Call for pricing'],
+      ['Special Menu Items', 'Category-specific food highlights and chef specials.', 'Call for pricing']
+    ],
+    waServices: ['Dine-in', 'Takeaway', 'Special Menu', 'Table Booking', 'Order Enquiry']
+  },
+  boutique: {
+    label: 'Boutique',
+    badge: city => `Fashion Boutique in ${city}`,
+    tagline: city => `Curated fashion, easy WhatsApp support, and a more polished local brand presence.`,
+    hours: 'Mon-Sat: 11:00 AM - 8:00 PM\nSunday: Closed',
+    services: [
+      ['Ethnic Wear', 'Curated traditional and festive outfit collections.', 'Call for pricing'],
+      ['Casual and Occasion Wear', 'Fashion pieces for everyday and special events.', 'Call for pricing'],
+      ['Personal Styling Help', 'Friendly support for choosing the right look.', 'Call for pricing'],
+      ['New Arrivals', 'Fresh collection highlights and seasonal fashion updates.', 'Call for pricing']
+    ],
+    waServices: ['Ethnic Wear', 'Occasion Wear', 'Styling Help', 'New Arrivals', 'Collection Enquiry']
+  },
+  pharmacy: {
+    label: 'Medical Store',
+    badge: city => `Trusted Medical Store in ${city}`,
+    tagline: city => `Easy medicine availability checks and dependable local support in ${city}.`,
+    hours: 'Daily: 8:00 AM - 10:00 PM',
+    services: [
+      ['Medicine Availability', 'Support for common prescription and OTC medicine needs.', 'Call for pricing'],
+      ['Health Essentials', 'Daily-use wellness and care products.', 'Call for pricing'],
+      ['Prescription Support', 'Quick response for basic prescription queries.', 'Call for pricing'],
+      ['Home Delivery Enquiry', 'Delivery support availability based on location.', 'Call for pricing']
+    ],
+    waServices: ['Medicine Availability', 'Health Essentials', 'Prescription Support', 'Delivery Enquiry', 'Store Contact']
+  },
+  lawyer: {
+    label: 'Law Firm',
+    badge: city => `Trusted Legal Support in ${city}`,
+    tagline: city => `Professional legal guidance and client support in a clear and reliable format.`,
+    hours: 'Mon-Sat: 10:00 AM - 7:00 PM\nSunday: By appointment',
+    services: [
+      ['Legal Consultation', 'Initial consultation for common legal concerns.', 'Call for pricing'],
+      ['Documentation Support', 'Help with basic legal document and notice needs.', 'Call for pricing'],
+      ['Property and Civil Matters', 'Guidance for local dispute and property-related issues.', 'Call for pricing'],
+      ['Client Follow-up', 'Reliable communication for ongoing legal support.', 'Call for pricing']
+    ],
+    waServices: ['Legal Consultation', 'Documentation Support', 'Property Matters', 'Civil Support', 'Appointment Request']
+  },
+  mechanic: {
+    label: 'Auto Garage',
+    badge: city => `Trusted Auto Service in ${city}`,
+    tagline: city => `Reliable vehicle service and repair support for local customers in ${city}.`,
+    hours: 'Mon-Sat: 9:00 AM - 8:00 PM\nSunday: Closed',
+    services: [
+      ['Vehicle Inspection', 'Quick inspection and issue identification support.', 'Call for pricing'],
+      ['Repair and Maintenance', 'Routine repair and maintenance service guidance.', 'Call for pricing'],
+      ['Oil and Service Check', 'Basic service support for smoother performance.', 'Call for pricing'],
+      ['Emergency Assistance', 'Fast response for urgent vehicle support requests.', 'Call for pricing']
+    ],
+    waServices: ['Vehicle Inspection', 'Repair Support', 'Service Check', 'Emergency Help', 'Garage Contact']
+  },
+  other: {
+    label: 'Business',
+    badge: city => `Trusted Business in ${city}`,
+    tagline: city => `A simple and professional digital presence that helps customers discover and contact your business.`,
+    hours: 'Mon-Sat: 10:00 AM - 7:00 PM\nSunday: By appointment',
+    services: [
+      ['Core Service', 'A clear service block for your main offer.', 'Call for pricing'],
+      ['Customer Support', 'Simple customer assistance and enquiry flow.', 'Call for pricing'],
+      ['Special Service', 'Highlight an important value-added service.', 'Call for pricing'],
+      ['Follow-up Help', 'Support that helps customers stay engaged.', 'Call for pricing']
+    ],
+    waServices: ['Core Service', 'Customer Support', 'Special Service', 'Follow-up Help', 'Business Enquiry']
+  }
+};
+
 function showTab(tab, el) {
   document.querySelectorAll('.ptab').forEach(t => t.classList.remove('active'));
   el.classList.add('active');
@@ -308,6 +467,26 @@ function stepProgress(step) {
   });
 }
 
+function capitalizeText(text) {
+  return (text || '').replace(/\s+/g, ' ').trim();
+}
+
+function buildGeneratedContent({ name, cat, city, phone, about }) {
+  const meta = categoryMeta[cat] || categoryMeta.other;
+  const aboutLead = about ? `${capitalizeText(about)}. ` : '';
+  const services = meta.services.map(([serviceName, desc, price]) => ({ name: serviceName, desc, price }));
+  return {
+    badge: meta.badge(city),
+    tagline: meta.tagline(city),
+    services,
+    about: `${aboutLead}${name} is a trusted ${meta.label.toLowerCase()} serving people in ${city}. The business is presented online in a professional and approachable way so customers can understand the services clearly and contact the team without confusion. This preview shows how a stronger digital presence can make the business look more credible and easier to choose.`,
+    hours: meta.hours,
+    gmbDescription: `${name} is a trusted ${meta.label.toLowerCase()} in ${city}. Customers can quickly understand the services, location, and contact details, making it easier to discover and reach the business online.`,
+    whatsappMessage: `🙏 Namaskar! Welcome to ${name}.\n\nThank you for contacting us. We are happy to help you with your enquiry.\n\n${phone ? `You can also call us on ${phone}.` : 'Please share your requirement and we will get back to you shortly.'}`,
+    waServices: meta.waServices
+  };
+}
+
 async function generate() {
   const name = document.getElementById('f-name').value.trim();
   const cat = document.getElementById('f-category').value;
@@ -321,92 +500,38 @@ async function generate() {
   }
 
   const btn = document.getElementById('gen-btn');
-  btn.disabled = true; btn.textContent = 'Generating...';
+  btn.disabled = true;
+  btn.textContent = 'Generating...';
   document.getElementById('empty-state').style.display = 'none';
   document.getElementById('preview-state').classList.remove('show');
   document.getElementById('loading-state').classList.add('show');
 
-  const catLabels = {
-    clinic:'Medical Clinic', dental:'Dental Clinic', tutor:'Coaching Center',
-    salon:'Salon & Beauty Studio', ca:'CA Firm', gym:'Gym & Fitness', restaurant:'Restaurant',
-    boutique:'Boutique', pharmacy:'Medical Store', lawyer:'Law Firm', mechanic:'Auto Garage', other:'Business'
-  };
-  const catLabel = catLabels[cat] || 'Business';
+  const catLabel = (categoryMeta[cat] || categoryMeta.other).label;
 
-  // Step animation
   let step = 0;
-  const stepTimer = setInterval(() => { if (step < 3) { step++; stepProgress(step); } }, 2200);
-
-  const prompt = `You are an AI that generates website content for Indian MSMEs. Generate content for this business and return ONLY a valid JSON object (no markdown, no explanation):
-
-Business Name: ${name}
-Business Type: ${catLabel}
-City: ${city}
-Phone: ${phone || 'Not provided'}
-About: ${about || 'A trusted local business'}
-
-Return this exact JSON structure:
-{
-  "badge": "short category label (e.g. 'Trusted Clinic in ${city}')",
-  "tagline": "compelling one-line tagline for the business (15-20 words, warm and trustworthy)",
-  "services": [
-    {"name": "Service 1", "desc": "brief description", "price": "price or 'Call for pricing'"},
-    {"name": "Service 2", "desc": "brief description", "price": "price or 'Call for pricing'"},
-    {"name": "Service 3", "desc": "brief description", "price": "price or 'Call for pricing'"},
-    {"name": "Service 4", "desc": "brief description", "price": "price or 'Call for pricing'"}
-  ],
-  "about": "3-4 sentence about section in warm, professional tone. Mention city, experience, and what makes them trustworthy. 60-80 words.",
-  "hours": "Mon–Sat: 9:00 AM – 7:00 PM (adjust for ${catLabel})",
-  "gmbDescription": "Google My Business description — 2-3 sentences, include city, category, and key services. 40-60 words. Should help with local SEO.",
-  "whatsappMessage": "WhatsApp auto-reply in warm Hinglish — greet the customer, mention business name, offer help, give phone or say you'll call back. 3-4 lines. Use 🙏 emoji.",
-  "waServices": ["Service 1", "Service 2", "Service 3", "Service 4", "Service 5"]
-}`;
+  const stepTimer = setInterval(() => {
+    if (step < 3) {
+      step++;
+      stepProgress(step);
+    }
+  }, 900);
 
   try {
-    const resp = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1000,
-        messages: [{ role: 'user', content: prompt }]
-      })
-    });
-
-    const data = await resp.json();
-    const raw = data.content?.[0]?.text || '';
-    const clean = raw.replace(/```json|```/g, '').trim();
-    const result = JSON.parse(clean);
-
+    await new Promise(resolve => setTimeout(resolve, 2400));
+    const result = buildGeneratedContent({ name, cat, city, phone, about });
     clearInterval(stepTimer);
     stepProgress(4);
     generatedData = { name, catLabel, city, phone, result };
-
-    setTimeout(() => renderPreview(name, catLabel, city, phone, result), 600);
-
+    setTimeout(() => renderPreview(name, catLabel, city, phone, result), 400);
   } catch (err) {
     clearInterval(stepTimer);
     console.error(err);
-    // Fallback if API fails
-    const fallback = {
-      badge: `Trusted ${catLabel} in ${city}`,
-      tagline: `Professional ${catLabel} services in ${city}. Trusted by hundreds of local customers.`,
-      services: [
-        { name: 'Consultation', desc: 'Expert consultation and assessment', price: 'Call for pricing' },
-        { name: 'Core Service', desc: 'Our primary professional service', price: 'Call for pricing' },
-        { name: 'Follow-up', desc: 'Dedicated follow-up and support', price: 'Call for pricing' },
-        { name: 'Home Visit', desc: 'Available on request', price: 'Call for pricing' }
-      ],
-      about: `${name} is a trusted ${catLabel} serving the ${city} community. With years of experience and a commitment to quality service, we pride ourselves on delivering professional, personalised care to every client. Our team is dedicated to your satisfaction and wellbeing.`,
-      hours: 'Mon–Sat: 9:00 AM – 7:00 PM\nSunday: By appointment',
-      gmbDescription: `${name} is a leading ${catLabel} in ${city}, providing professional services to local residents. We are committed to quality, trust, and customer satisfaction.`,
-      whatsappMessage: `🙏 Namaskar! Welcome to ${name}.\n\nThank you for reaching out. We're happy to help you!\n\nPlease share your query and we'll get back to you shortly. You can also call us directly.`,
-      waServices: ['Consultation', 'Primary Service', 'Follow-up Care', 'Emergency Support', 'Home Visit']
-    };
+    const fallback = buildGeneratedContent({ name, cat, city, phone, about });
     generatedData = { name, catLabel, city, phone, result: fallback };
     renderPreview(name, catLabel, city, phone, fallback);
   } finally {
-    btn.disabled = false; btn.textContent = 'Regenerate →';
+    btn.disabled = false;
+    btn.textContent = 'Regenerate →';
   }
 }
 
