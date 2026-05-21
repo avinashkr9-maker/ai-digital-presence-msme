@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dikhao Clinic Outreach Console</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700;800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --teal: #0B7B6B;
+      --teal-dark: #085a4e;
+      --teal-light: #E6F4F1;
+      --amber: #E8951A;
+      --amber-light: #FEF4E6;
+      --off-white: #F7F6F2;
+      --white: #FFFFFF;
+      --ink: #141414;
+      --ink-secondary: #4A4A4A;
+      --ink-muted: #7A7A7A;
+      --border: #E2E0D8;
+      --success: #0f9d58;
+      --danger: #c0392b;
+      --radius: 16px;
+      --shadow: 0 14px 40px rgba(20, 20, 20, 0.07);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: 'DM Sans', sans-serif;
+      background: var(--off-white);
+      color: var(--ink);
+    }
+    .app-shell {
+      max-width: 1320px;
+      margin: 0 auto;
+      padding: 28px 20px 80px;
+    }
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: flex-start;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+    .brand h1 {
+      margin: 0;
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-size: clamp(28px, 4vw, 44px);
+      line-height: 1.05;
+    }
+    .brand p {
+      margin: 10px 0 0;
+      color: var(--ink-secondary);
+      max-width: 720px;
+    }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 7px 12px;
+      color: var(--teal);
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .btn {
+      border: none;
+      cursor: pointer;
+      border-radius: 999px;
+      padding: 12px 16px;
+      font-weight: 700;
+      font-family: inherit;
+      transition: 0.2s ease;
+    }
+    .btn-primary { background: var(--teal); color: #fff; }
+    .btn-primary:hover { background: var(--teal-dark); }
+    .btn-secondary { background: var(--white); border: 1px solid var(--border); color: var(--ink); }
+    .btn-secondary:hover { border-color: var(--teal); color: var(--teal); }
+    .btn-danger { background: #fff4f2; color: var(--danger); border: 1px solid #f0c5bc; }
+    .panel {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+    .metric-card { padding: 18px; }
+    .metric-label { color: var(--ink-muted); font-size: 13px; }
+    .metric-value {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-size: 34px;
+      margin-top: 10px;
+    }
+    .workspace {
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      gap: 18px;
+      align-items: start;
+    }
+    .sidebar, .content { padding: 18px; }
+    h2, h3 { margin-top: 0; }
+    .field, .stack { margin-bottom: 14px; }
+    .field label {
+      display: block;
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 7px;
+      color: var(--ink-secondary);
+    }
+    input, select, textarea {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 11px 12px;
+      font: inherit;
+      background: #fff;
+      color: var(--ink);
+    }
+    textarea { min-height: 110px; resize: vertical; }
+    .mini {
+      color: var(--ink-muted);
+      font-size: 12px;
+      margin-top: 6px;
+      line-height: 1.5;
+    }
+    .row {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    .tabs {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+    .tab {
+      border: 1px solid var(--border);
+      background: #fff;
+      color: var(--ink-secondary);
+      padding: 10px 14px;
+      border-radius: 999px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .tab.active {
+      background: var(--teal-light);
+      color: var(--teal);
+      border-color: #b8d8d1;
+    }
+    .table-wrap {
+      overflow: auto;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 980px;
+      background: #fff;
+    }
+    th, td {
+      padding: 12px 10px;
+      border-bottom: 1px solid #f0ece4;
+      text-align: left;
+      vertical-align: top;
+      font-size: 14px;
+    }
+    th {
+      position: sticky;
+      top: 0;
+      background: #fcfbf8;
+      z-index: 1;
+      color: var(--ink-secondary);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .hot { background: #fff1e8; color: #b3541e; }
+    .high { background: #fef4e6; color: #a96207; }
+    .medium { background: #eef6ff; color: #2563eb; }
+    .low { background: #f3f4f6; color: #4b5563; }
+    .status-ready { background: #eef6ff; color: #2563eb; }
+    .status-sent, .status-follow-up-1-sent, .status-follow-up-2-sent { background: #f5f0ff; color: #6d28d9; }
+    .status-replied, .status-interested, .status-demo-requested { background: #eaf8ef; color: #0f9d58; }
+    .status-converted { background: #ddf7e7; color: #137333; }
+    .status-not-interested, .status-do-not-contact { background: #fff1f0; color: #c0392b; }
+    .action-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .action-chip {
+      border: 1px solid var(--border);
+      background: #fff;
+      border-radius: 999px;
+      padding: 7px 10px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .lead-card {
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px;
+      margin-bottom: 12px;
+      background: #fff;
+    }
+    .lead-card h4 { margin: 0 0 6px; }
+    .lead-card p { margin: 6px 0; color: var(--ink-secondary); font-size: 14px; }
+    .hidden { display: none; }
+    .empty {
+      padding: 26px;
+      text-align: center;
+      color: var(--ink-muted);
+    }
+    .footer-note {
+      margin-top: 14px;
+      color: var(--ink-muted);
+      font-size: 13px;
+    }
+    @media (max-width: 1100px) {
+      .metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .workspace { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 700px) {
+      .metrics { grid-template-columns: 1fr; }
+      .row { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <div class="topbar">
+      <div class="brand">
+        <div class="pill">Dikhao Internal Tool · Clinic Outreach Console</div>
+        <h1>Run clinic outreach without the confusing sheet mess.</h1>
+        <p>Import leads, auto-score them, send outreach, track follow-ups, and keep everything saved in your browser. Start with Gurugram clinics first.</p>
+      </div>
+      <div class="actions">
+        <button class="btn btn-primary" id="addSampleBtn">Load sample lead</button>
+        <button class="btn btn-secondary" id="exportBtn">Export CSV</button>
+        <button class="btn btn-danger" id="clearBtn">Clear all data</button>
+      </div>
+    </div>
+
+    <div class="metrics">
+      <div class="panel metric-card"><div class="metric-label">Total Leads</div><div class="metric-value" id="metricTotal">0</div></div>
+      <div class="panel metric-card"><div class="metric-label">Ready Now</div><div class="metric-value" id="metricReady">0</div></div>
+      <div class="panel metric-card"><div class="metric-label">Follow-ups Due</div><div class="metric-value" id="metricFollowUps">0</div></div>
+      <div class="panel metric-card"><div class="metric-label">Interested / Demo</div><div class="metric-value" id="metricInterested">0</div></div>
+      <div class="panel metric-card"><div class="metric-label">Converted</div><div class="metric-value" id="metricConverted">0</div></div>
+    </div>
+
+    <div class="workspace">
+      <div class="panel sidebar">
+        <h3>Import leads</h3>
+        <div class="field">
+          <label for="csvFile">Upload CSV</label>
+          <input type="file" id="csvFile" accept=".csv" />
+          <div class="mini">Use the same columns from the clinic raw leads template.</div>
+        </div>
+        <div class="field">
+          <label for="csvPaste">Or paste CSV text</label>
+          <textarea id="csvPaste" placeholder="Paste CSV with headers here"></textarea>
+        </div>
+        <button class="btn btn-primary" id="importBtn">Import leads</button>
+
+        <hr style="border:none;border-top:1px solid var(--border);margin:22px 0;">
+
+        <h3>Add one lead</h3>
+        <div class="row">
+          <div class="field"><label>Business Name</label><input id="leadName" placeholder="Health First Clinic" /></div>
+          <div class="field"><label>Category</label><input id="leadCategory" value="Clinic" /></div>
+        </div>
+        <div class="row">
+          <div class="field"><label>Phone</label><input id="leadPhone" placeholder="9898989898" /></div>
+          <div class="field"><label>Website</label><input id="leadWebsite" placeholder="Leave blank if none" /></div>
+        </div>
+        <div class="row">
+          <div class="field"><label>City</label><input id="leadCity" value="Gurugram" /></div>
+          <div class="field"><label>Locality</label><input id="leadLocality" placeholder="Sector 56" /></div>
+        </div>
+        <div class="row">
+          <div class="field"><label>Standalone</label><select id="leadStandalone"><option>Yes</option><option>No</option></select></div>
+          <div class="field"><label>Simple Offer</label><select id="leadSimpleOffer"><option>Yes</option><option>No</option></select></div>
+        </div>
+        <div class="field"><label>Notes</label><textarea id="leadNotes" placeholder="Anything useful"></textarea></div>
+        <button class="btn btn-primary" id="saveLeadBtn">Save lead</button>
+
+        <div class="footer-note">Everything autosaves locally in this browser using local storage. No backend needed for v1.</div>
+      </div>
+
+      <div class="panel content">
+        <div class="tabs">
+          <button class="tab active" data-view="queue">Outreach Queue</button>
+          <button class="tab" data-view="followups">Follow-ups Today</button>
+          <button class="tab" data-view="all">All Leads</button>
+          <button class="tab" data-view="converted">Converted</button>
+        </div>
+
+        <div class="toolbar">
+          <input id="searchInput" placeholder="Search by business name, locality, phone" style="max-width:320px;" />
+          <select id="priorityFilter" style="max-width:180px;">
+            <option value="">All priorities</option>
+            <option value="Hot">Hot</option>
+            <option value="High">High</option>
+            <option value="Medium">Medium</option>
+            <option value="Low">Low</option>
+          </select>
+          <select id="statusFilter" style="max-width:220px;">
+            <option value="">All statuses</option>
+            <option value="Ready">Ready</option>
+            <option value="Sent">Sent</option>
+            <option value="Follow-up 1 Sent">Follow-up 1 Sent</option>
+            <option value="Follow-up 2 Sent">Follow-up 2 Sent</option>
+            <option value="Replied">Replied</option>
+            <option value="Interested">Interested</option>
+            <option value="Demo Requested">Demo Requested</option>
+            <option value="Converted">Converted</option>
+            <option value="Not Interested">Not Interested</option>
+            <option value="Do Not Contact">Do Not Contact</option>
+          </select>
+        </div>
+
+        <div id="tableView" class="table-wrap"></div>
+        <div id="cardView" class="hidden"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const STORAGE_KEY = 'dikhao-clinic-outreach-v1';
+    const DEFAULT_MESSAGE = (name) => `Hello Doctor,\n\n${name ? name + ' is' : 'Your clinic is'} already being searched on Google, but without a strong website and clear online presence, many potential patients move on to other clinics.\n\nI am building a simple AI-powered tool that creates a clinic website, Google listing support, and WhatsApp contact flow in a very easy way.\n\nWould you like to see a quick 30-second demo? It is completely free.`;
+
+    let state = {
+      leads: loadState(),
+      view: 'queue',
+      filters: { search: '', priority: '', status: '' }
+    };
+
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        return raw ? JSON.parse(raw) : [];
+      } catch (error) {
+        return [];
+      }
+    }
+
+    function saveState() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state.leads));
+    }
+
+    function uid() {
+      return Math.random().toString(36).slice(2, 9).toUpperCase();
+    }
+
+    function formatDate(date) {
+      if (!date) return '';
+      return new Date(date).toISOString().slice(0, 10);
+    }
+
+    function addDays(dateStr, days) {
+      if (!dateStr) return '';
+      const date = new Date(dateStr);
+      date.setDate(date.getDate() + days);
+      return formatDate(date);
+    }
+
+    function scoreLead(rawLead) {
+      const lead = { ...rawLead };
+      lead.businessName = (lead.businessName || '').trim();
+      lead.category = (lead.category || '').trim() || 'Clinic';
+      lead.city = (lead.city || 'Gurugram').trim();
+      lead.locality = (lead.locality || '').trim();
+      lead.phone = (lead.phone || '').trim();
+      lead.website = (lead.website || '').trim();
+      lead.status = lead.status || 'Ready';
+      lead.notes = lead.notes || '';
+      lead.message = lead.message || DEFAULT_MESSAGE(lead.businessName);
+      lead.firstSentDate = lead.firstSentDate || '';
+      lead.followUp1Date = lead.firstSentDate ? addDays(lead.firstSentDate, 2) : '';
+      lead.followUp2Date = lead.firstSentDate ? addDays(lead.firstSentDate, 5) : '';
+      lead.updatedAt = new Date().toISOString();
+      lead.id = lead.id || `${(lead.city || 'CITY').slice(0,4).toUpperCase()}-${uid()}`;
+
+      const phoneScore = lead.phone ? 1 : 0;
+      const noWebsiteScore = lead.website ? 0 : 1;
+      const clinicScore = lead.category.toLowerCase().includes('clinic') ? 1 : 0;
+      const standaloneScore = String(lead.standalone || '').toLowerCase() === 'yes' ? 1 : 0;
+      const simpleOfferScore = String(lead.simpleOffer || '').toLowerCase() === 'yes' ? 1 : 0;
+      const priorityScore = phoneScore + noWebsiteScore + clinicScore + standaloneScore + simpleOfferScore;
+
+      lead.priorityScore = priorityScore;
+      lead.priorityBand = priorityScore >= 5 ? 'Hot' : priorityScore >= 4 ? 'High' : priorityScore >= 3 ? 'Medium' : 'Low';
+      lead.ready = phoneScore === 1 && clinicScore === 1 && priorityScore >= 3;
+
+      return lead;
+    }
+
+    function normalizeImportedLead(row) {
+      return scoreLead({
+        id: row['Lead ID'] || row['lead id'] || '',
+        businessName: row['Business Name'] || row['business name'] || '',
+        category: row['Category'] || row['category'] || 'Clinic',
+        address: row['Address'] || row['address'] || '',
+        phone: row['Phone'] || row['phone'] || '',
+        website: row['Website'] || row['website'] || '',
+        mapsUrl: row['Maps URL'] || row['maps url'] || '',
+        rating: row['Rating'] || row['rating'] || '',
+        reviewsCount: row['Reviews Count'] || row['reviews count'] || '',
+        city: row['City'] || row['city'] || 'Gurugram',
+        locality: row['Locality'] || row['locality'] || '',
+        source: row['Source'] || row['source'] || 'Apify',
+        standalone: row['Standalone Flag'] || row['standalone flag'] || 'Yes',
+        simpleOffer: row['Simple Offer Flag'] || row['simple offer flag'] || 'Yes',
+        notes: row['Notes'] || row['notes'] || '',
+        importedAt: row['Imported At'] || row['imported at'] || formatDate(new Date())
+      });
+    }
+
+    function parseCSV(text) {
+      const rows = [];
+      let current = '';
+      let row = [];
+      let inQuotes = false;
+      for (let i = 0; i < text.length; i++) {
+        const char = text[i];
+        const next = text[i + 1];
+        if (char === '"') {
+          if (inQuotes && next === '"') {
+            current += '"';
+            i++;
+          } else {
+            inQuotes = !inQuotes;
+          }
+        } else if (char === ',' && !inQuotes) {
+          row.push(current);
+          current = '';
+        } else if ((char === '\n' || char === '\r') && !inQuotes) {
+          if (char === '\r' && next === '\n') i++;
+          row.push(current);
+          if (row.some(cell => cell.trim() !== '')) rows.push(row);
+          row = [];
+          current = '';
+        } else {
+          current += char;
+        }
+      }
+      if (current || row.length) {
+        row.push(current);
+        if (row.some(cell => cell.trim() !== '')) rows.push(row);
+      }
+      if (!rows.length) return [];
+      const headers = rows[0].map(h => h.trim());
+      return rows.slice(1).map(values => {
+        const obj = {};
+        headers.forEach((header, index) => obj[header] = (values[index] || '').trim());
+        return obj;
+      });
+    }
+
+    function mergeLeads(newLeads) {
+      const map = new Map(state.leads.map(lead => [lead.id, lead]));
+      newLeads.forEach(lead => {
+        const existing = map.get(lead.id);
+        map.set(lead.id, scoreLead({ ...existing, ...lead }));
+      });
+      state.leads = Array.from(map.values());
+      saveState();
+      render();
+    }
+
+    function addManualLead() {
+      const lead = scoreLead({
+        businessName: document.getElementById('leadName').value,
+        category: document.getElementById('leadCategory').value,
+        phone: document.getElementById('leadPhone').value,
+        website: document.getElementById('leadWebsite').value,
+        city: document.getElementById('leadCity').value,
+        locality: document.getElementById('leadLocality').value,
+        standalone: document.getElementById('leadStandalone').value,
+        simpleOffer: document.getElementById('leadSimpleOffer').value,
+        notes: document.getElementById('leadNotes').value,
+        source: 'Manual',
+        importedAt: formatDate(new Date())
+      });
+      state.leads.unshift(lead);
+      saveState();
+      ['leadName','leadPhone','leadWebsite','leadLocality','leadNotes'].forEach(id => document.getElementById(id).value = '');
+      render();
+    }
+
+    function filteredLeads() {
+      const today = formatDate(new Date());
+      return state.leads.filter(lead => {
+        if (state.view === 'queue' && (!lead.ready || ['Converted', 'Not Interested', 'Do Not Contact'].includes(lead.status))) return false;
+        if (state.view === 'followups') {
+          const due1 = lead.followUp1Date && lead.followUp1Date <= today && !['Follow-up 1 Sent', 'Follow-up 2 Sent', 'Converted', 'Not Interested', 'Do Not Contact'].includes(lead.status);
+          const due2 = lead.followUp2Date && lead.followUp2Date <= today && !['Follow-up 2 Sent', 'Converted', 'Not Interested', 'Do Not Contact'].includes(lead.status);
+          if (!due1 && !due2) return false;
+        }
+        if (state.view === 'converted' && lead.status !== 'Converted') return false;
+        const haystack = `${lead.businessName} ${lead.locality} ${lead.phone}`.toLowerCase();
+        if (state.filters.search && !haystack.includes(state.filters.search.toLowerCase())) return false;
+        if (state.filters.priority && lead.priorityBand !== state.filters.priority) return false;
+        if (state.filters.status && lead.status !== state.filters.status) return false;
+        return true;
+      }).sort((a, b) => {
+        const order = { Hot: 1, High: 2, Medium: 3, Low: 4 };
+        return (order[a.priorityBand] || 9) - (order[b.priorityBand] || 9);
+      });
+    }
+
+    function metrics() {
+      const today = formatDate(new Date());
+      return {
+        total: state.leads.length,
+        ready: state.leads.filter(l => l.ready && ['Ready','Sent','Follow-up 1 Sent','Follow-up 2 Sent','Replied','Interested','Demo Requested'].includes(l.status)).length,
+        followUps: state.leads.filter(l => (l.followUp1Date && l.followUp1Date <= today && !['Follow-up 1 Sent','Follow-up 2 Sent','Converted','Not Interested','Do Not Contact'].includes(l.status)) || (l.followUp2Date && l.followUp2Date <= today && !['Follow-up 2 Sent','Converted','Not Interested','Do Not Contact'].includes(l.status))).length,
+        interested: state.leads.filter(l => ['Interested','Demo Requested','Replied'].includes(l.status)).length,
+        converted: state.leads.filter(l => l.status === 'Converted').length
+      };
+    }
+
+    function badgeClass(priority) {
+      return priority.toLowerCase();
+    }
+
+    function statusClass(status) {
+      return `status-${status.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')}`;
+    }
+
+    function followUpLabel(lead) {
+      const today = formatDate(new Date());
+      if (lead.followUp1Date && lead.followUp1Date <= today && !['Follow-up 1 Sent','Follow-up 2 Sent','Converted'].includes(lead.status)) return 'Follow-up 1';
+      if (lead.followUp2Date && lead.followUp2Date <= today && !['Follow-up 2 Sent','Converted'].includes(lead.status)) return 'Follow-up 2';
+      return '';
+    }
+
+    function setStatus(id, status) {
+      state.leads = state.leads.map(lead => {
+        if (lead.id !== id) return lead;
+        const next = { ...lead, status, updatedAt: new Date().toISOString() };
+        if (status === 'Sent' && !next.firstSentDate) {
+          next.firstSentDate = formatDate(new Date());
+          next.followUp1Date = addDays(next.firstSentDate, 2);
+          next.followUp2Date = addDays(next.firstSentDate, 5);
+        }
+        return scoreLead(next);
+      });
+      saveState();
+      render();
+    }
+
+    async function copyMessage(id, mode = 'first') {
+      const lead = state.leads.find(item => item.id === id);
+      if (!lead) return;
+      let text = lead.message || DEFAULT_MESSAGE(lead.businessName);
+      if (mode === 'follow1') {
+        text = `Hello Doctor,\n\nJust following up on my earlier note about a quick 30-second demo for ${lead.businessName || 'your clinic'}.\n\nIt shows how your clinic can look better on Google and convert more patient interest into WhatsApp enquiries.\n\nHappy to share it whenever convenient.`;
+      }
+      if (mode === 'follow2') {
+        text = `Hello Doctor,\n\nOne last follow-up from my side. I made this for clinics that want a simple online presence without any technical work.\n\nIf you want, I can send a free 30-second demo for ${lead.businessName || 'your clinic'}.`;
+      }
+      await navigator.clipboard.writeText(text);
+      alert('Message copied');
+    }
+
+    function exportCSV() {
+      const headers = ['Lead ID','Business Name','Category','Phone','Website','City','Locality','Priority Band','Priority Score','Ready','Status','First Sent Date','Follow-up 1 Date','Follow-up 2 Date','Notes'];
+      const rows = state.leads.map(lead => [
+        lead.id, lead.businessName, lead.category, lead.phone, lead.website, lead.city, lead.locality,
+        lead.priorityBand, lead.priorityScore, lead.ready ? 'Yes' : 'No', lead.status,
+        lead.firstSentDate || '', lead.followUp1Date || '', lead.followUp2Date || '', lead.notes || ''
+      ]);
+      const csv = [headers, ...rows].map(row => row.map(cell => {
+        const value = String(cell ?? '');
+        return /[",\n]/.test(value) ? `"${value.replace(/"/g, '""')}"` : value;
+      }).join(',')).join('\n');
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'dikhao-clinic-outreach-export.csv';
+      link.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function clearAll() {
+      if (!confirm('Clear all locally saved outreach data from this browser?')) return;
+      state.leads = [];
+      saveState();
+      render();
+    }
+
+    function loadSampleLead() {
+      mergeLeads([scoreLead({
+        businessName: 'Health First Clinic',
+        category: 'Clinic',
+        phone: '9898989898',
+        website: '',
+        city: 'Gurugram',
+        locality: 'Sector 56',
+        standalone: 'Yes',
+        simpleOffer: 'Yes',
+        notes: 'Good sample lead',
+        source: 'Sample',
+        importedAt: formatDate(new Date())
+      })]);
+    }
+
+    function renderTable(leads) {
+      const container = document.getElementById('tableView');
+      const empty = document.getElementById('cardView');
+      empty.classList.add('hidden');
+      container.classList.remove('hidden');
+
+      if (!leads.length) {
+        container.innerHTML = '<div class="empty">No leads in this view yet.</div>';
+        return;
+      }
+
+      container.innerHTML = `
+        <table>
+          <thead>
+            <tr>
+              <th>Clinic</th>
+              <th>Priority</th>
+              <th>Status</th>
+              <th>Phone</th>
+              <th>Locality</th>
+              <th>Follow-up</th>
+              <th>Notes</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${leads.map(lead => `
+              <tr>
+                <td>
+                  <strong>${escapeHtml(lead.businessName)}</strong><br>
+                  <span style="color:var(--ink-muted);font-size:12px;">${escapeHtml(lead.city || '')} · Score ${lead.priorityScore}</span>
+                </td>
+                <td><span class="badge ${badgeClass(lead.priorityBand)}">${lead.priorityBand}</span></td>
+                <td><span class="badge ${statusClass(lead.status)}">${lead.status}</span></td>
+                <td>${escapeHtml(lead.phone || '-')}</td>
+                <td>${escapeHtml(lead.locality || '-')}</td>
+                <td>${escapeHtml(followUpLabel(lead) || '-')}</td>
+                <td><textarea data-note-id="${lead.id}" style="min-height:70px;">${escapeHtml(lead.notes || '')}</textarea></td>
+                <td>
+                  <div class="action-group">
+                    <button class="action-chip" onclick="copyMessage('${lead.id}','first')">Copy 1st</button>
+                    <button class="action-chip" onclick="copyMessage('${lead.id}','follow1')">Copy F1</button>
+                    <button class="action-chip" onclick="copyMessage('${lead.id}','follow2')">Copy F2</button>
+                    <button class="action-chip" onclick="setStatus('${lead.id}','Sent')">Mark Sent</button>
+                    <button class="action-chip" onclick="setStatus('${lead.id}','Interested')">Interested</button>
+                    <button class="action-chip" onclick="setStatus('${lead.id}','Demo Requested')">Demo</button>
+                    <button class="action-chip" onclick="setStatus('${lead.id}','Converted')">Convert</button>
+                    <button class="action-chip" onclick="setStatus('${lead.id}','Not Interested')">Close</button>
+                  </div>
+                </td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      `;
+
+      document.querySelectorAll('[data-note-id]').forEach(el => {
+        el.addEventListener('change', event => {
+          const id = event.target.getAttribute('data-note-id');
+          state.leads = state.leads.map(lead => lead.id === id ? scoreLead({ ...lead, notes: event.target.value }) : lead);
+          saveState();
+        });
+      });
+    }
+
+    function renderCards(leads) {
+      const container = document.getElementById('cardView');
+      const table = document.getElementById('tableView');
+      table.classList.add('hidden');
+      container.classList.remove('hidden');
+      if (!leads.length) {
+        container.innerHTML = '<div class="empty">No converted leads yet.</div>';
+        return;
+      }
+      container.innerHTML = leads.map(lead => `
+        <div class="lead-card">
+          <h4>${escapeHtml(lead.businessName)}</h4>
+          <p><strong>Phone:</strong> ${escapeHtml(lead.phone || '-')}</p>
+          <p><strong>Locality:</strong> ${escapeHtml(lead.locality || '-')}</p>
+          <p><strong>Status:</strong> <span class="badge ${statusClass(lead.status)}">${lead.status}</span></p>
+          <p><strong>Notes:</strong> ${escapeHtml(lead.notes || '-')}</p>
+        </div>
+      `).join('');
+    }
+
+    function escapeHtml(text) {
+      return String(text || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+
+    function render() {
+      const data = filteredLeads();
+      const counts = metrics();
+      document.getElementById('metricTotal').textContent = counts.total;
+      document.getElementById('metricReady').textContent = counts.ready;
+      document.getElementById('metricFollowUps').textContent = counts.followUps;
+      document.getElementById('metricInterested').textContent = counts.interested;
+      document.getElementById('metricConverted').textContent = counts.converted;
+
+      document.querySelectorAll('.tab').forEach(tab => tab.classList.toggle('active', tab.dataset.view === state.view));
+
+      if (state.view === 'converted') {
+        renderCards(data);
+      } else {
+        renderTable(data);
+      }
+    }
+
+    document.querySelectorAll('.tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        state.view = tab.dataset.view;
+        render();
+      });
+    });
+
+    document.getElementById('searchInput').addEventListener('input', (e) => {
+      state.filters.search = e.target.value;
+      render();
+    });
+
+    document.getElementById('priorityFilter').addEventListener('change', (e) => {
+      state.filters.priority = e.target.value;
+      render();
+    });
+
+    document.getElementById('statusFilter').addEventListener('change', (e) => {
+      state.filters.status = e.target.value;
+      render();
+    });
+
+    document.getElementById('saveLeadBtn').addEventListener('click', addManualLead);
+    document.getElementById('exportBtn').addEventListener('click', exportCSV);
+    document.getElementById('clearBtn').addEventListener('click', clearAll);
+    document.getElementById('addSampleBtn').addEventListener('click', loadSampleLead);
+
+    document.getElementById('importBtn').addEventListener('click', async () => {
+      const file = document.getElementById('csvFile').files[0];
+      const pasted = document.getElementById('csvPaste').value.trim();
+      let text = pasted;
+      if (!text && file) {
+        text = await file.text();
+      }
+      if (!text) {
+        alert('Please upload or paste CSV first.');
+        return;
+      }
+      const rows = parseCSV(text);
+      const imported = rows.map(normalizeImportedLead).filter(lead => lead.businessName);
+      mergeLeads(imported);
+      document.getElementById('csvPaste').value = '';
+      document.getElementById('csvFile').value = '';
+      alert(`${imported.length} leads imported`);
+    });
+
+    render();
+  </script>
+</body>
+</html>
