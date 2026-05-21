@@ -8,6 +8,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700;800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="./supabase-config.local.js"></script>
   <style>
     :root {
       --teal: #0B7B6B;
@@ -325,7 +326,7 @@
     <div class="config-banner" id="configBanner">
       <div>
         <strong id="modeLabel">Mode: Local demo mode</strong>
-        <div class="mini">Supabase project URL is prefilled. Just add the anon key to turn this into a shared internal CRM.</div>
+        <div class="mini">Supabase project URL is prefilled. Best method: keep your anon key in a private local config file so you do not need to paste it every time.</div>
       </div>
       <button class="btn btn-primary" id="connectBtn">Connect Supabase</button>
     </div>
@@ -445,7 +446,7 @@
         <button class="btn btn-secondary" id="testConfigBtn">Test connection</button>
         <button class="btn btn-secondary" id="closeConfigBtn">Close</button>
       </div>
-      <div class="footer-note">Before connecting, run the SQL file `supabase-schema.sql` in your Supabase SQL editor.</div>
+      <div class="footer-note">Before connecting, run the SQL file `supabase-schema.sql` in your Supabase SQL editor. For easier repeat use, keep credentials in `supabase-config.local.js`.</div>
     </div>
   </div>
 
@@ -473,8 +474,18 @@
     };
 
     function loadConfig() {
-      try { return JSON.parse(localStorage.getItem(STORAGE_KEYS.config)) || { url: 'https://hawdlljwbjgdnjlqniqn.supabase.co', anonKey: '', workspace: 'dikhao-clinics' }; }
-      catch { return { url: 'https://hawdlljwbjgdnjlqniqn.supabase.co', anonKey: '', workspace: 'dikhao-clinics' }; }
+      const defaults = {
+        url: 'https://hawdlljwbjgdnjlqniqn.supabase.co',
+        anonKey: '',
+        workspace: 'dikhao-clinics'
+      };
+      const localScriptConfig = window.DIKHAO_SUPABASE_CONFIG || {};
+      try {
+        const saved = JSON.parse(localStorage.getItem(STORAGE_KEYS.config)) || {};
+        return { ...defaults, ...localScriptConfig, ...saved };
+      } catch {
+        return { ...defaults, ...localScriptConfig };
+      }
     }
 
     function saveConfig() {

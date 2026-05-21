@@ -13,6 +13,7 @@ This is the cleaner internal software version.
 ## Files
 - `clinic-outreach-v2.html`
 - `supabase-schema.sql`
+- `supabase-config.example.js`
 
 ## Setup in 10 minutes
 
@@ -37,7 +38,14 @@ From Supabase project settings copy:
 The project URL is already prefilled in the app:
 - `https://hawdlljwbjgdnjlqniqn.supabase.co`
 
-### 4. Open the app
+### 4. Best setup method: local private config file
+- Copy `supabase-config.example.js`
+- Rename it to `supabase-config.local.js`
+- Paste your anon key there
+- Keep workspace slug as `dikhao-clinics`
+- Open `clinic-outreach-v2.html` in browser
+
+### 5. Fallback manual method
 - Open `clinic-outreach-v2.html` in browser
 - Click `Supabase setup`
 - Paste the anon key
@@ -45,7 +53,7 @@ The project URL is already prefilled in the app:
 - Keep workspace slug as `dikhao-clinics` unless you want separate workspaces
 - Click `Save and connect`
 
-### 5. Start using
+### 6. Start using
 - import CSV leads
 - or add leads manually
 - click a lead name to open detail panel

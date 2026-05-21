@@ -6,6 +6,7 @@ This folder now has both the simple V1 local tool and the better V2 shared CRM d
 - `clinic-outreach-app.html` -> V1 local browser-only outreach software
 - `clinic-outreach-v2.html` -> V2 shared CRM-ready internal software
 - `supabase-schema.sql` -> database schema for V2
+- `supabase-config.example.js` -> private config template for easiest setup
 - `V2-SETUP.md` -> V2 setup guide
 - `CLINIC-OUTREACH-APPS-SCRIPT.js` -> Google Sheets version if needed later
 - `CLINIC-OUTREACH-SHEET-SETUP.md` -> setup guide for sheet workflow
@@ -22,8 +23,9 @@ This folder now has both the simple V1 local tool and the better V2 shared CRM d
 1. Create Supabase project
 2. Run `supabase-schema.sql`
 3. Open `clinic-outreach-v2.html`
-4. Add the anon key only. The Supabase project URL is already prefilled.
-5. Start importing and managing leads
+4. Copy `supabase-config.example.js` to `supabase-config.local.js`
+5. Add the anon key there and open the app
+6. Start importing and managing leads
 
 ## Why V2 is better
 - shared database instead of one browser only
