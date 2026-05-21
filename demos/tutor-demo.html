@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bright Future Coaching Centre</title>
+  <style>
+    :root {
+      --bg: #fffdf8;
+      --text: #2b2f38;
+      --muted: #667085;
+      --primary: #7c4dff;
+      --accent: #efe9ff;
+      --card: #ffffff;
+      --border: #e6ddff;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+    .container { width: min(1100px, 92%); margin: 0 auto; }
+    header { background: #fff; border-bottom: 1px solid var(--border); }
+    .nav { display: flex; justify-content: space-between; align-items: center; padding: 16px 0; }
+    .brand { font-weight: 700; }
+    .cta { display: inline-block; padding: 12px 18px; border-radius: 10px; text-decoration: none; font-weight: 600; margin-right: 10px; }
+    .primary { background: var(--primary); color: #fff; }
+    .secondary { background: var(--accent); color: var(--primary); }
+    .hero { padding: 72px 0 40px; }
+    .hero h1 { font-size: clamp(2rem, 4vw, 3.2rem); line-height: 1.15; margin-bottom: 16px; }
+    .hero p { max-width: 720px; color: var(--muted); }
+    section { padding: 26px 0; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; }
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 22px; }
+    h2 { font-size: 1.7rem; margin-bottom: 10px; }
+    footer { margin-top: 36px; padding: 26px 0 50px; border-top: 1px solid var(--border); color: var(--muted); }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container nav">
+      <div class="brand">Bright Future Coaching Centre</div>
+      <div>
+        <a class="cta secondary" href="#contact">WhatsApp Now</a>
+        <a class="cta primary" href="#contact">Enquire Now</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <h1>Better Learning, Stronger Basics, Better Results</h1>
+        <p>Join Bright Future Coaching Centre for clear teaching, regular practice, and confidence-building support for school students.</p>
+        <div style="margin-top: 24px;">
+          <a class="cta primary" href="#contact">Ask About Admissions</a>
+          <a class="cta secondary" href="#courses">View Courses</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="courses">
+      <div class="container">
+        <h2>Courses and Support</h2>
+        <div class="grid">
+          <div class="card"><strong>School Tuition Support</strong><p>Regular subject support with focus on concepts and revision.</p></div>
+          <div class="card"><strong>Maths and Science Coaching</strong><p>Better understanding and stronger performance in key academic subjects.</p></div>
+          <div class="card"><strong>Board Exam Preparation</strong><p>Structured support for exams, practice, and confidence building.</p></div>
+          <div class="card"><strong>Doubt Clearing Sessions</strong><p>Extra help for difficult topics and regular revision support.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="container grid">
+        <div class="card">
+          <h2>About Us</h2>
+          <p>Bright Future Coaching Centre helps students strengthen basics, improve understanding, and build confidence through simple teaching and personal attention.</p>
+        </div>
+        <div class="card">
+          <h2>Why Parents Choose Us</h2>
+          <ul>
+            <li>Clear and student-friendly teaching</li>
+            <li>Small batches</li>
+            <li>Regular practice and revision</li>
+            <li>Easy parent communication</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="container">
+        <h2>Frequently Asked Questions</h2>
+        <div class="grid">
+          <div class="card"><strong>Which classes do you teach?</strong><p>Please contact us for current class and subject details.</p></div>
+          <div class="card"><strong>Do you offer demo classes?</strong><p>Yes, please call or message us to check availability.</p></div>
+          <div class="card"><strong>Can parents contact directly?</strong><p>Yes, parents can call or message us on WhatsApp for enquiries.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact">
+      <div class="container card">
+        <h2>Contact Us</h2>
+        <p><strong>Phone:</strong> +91 98989 56789</p>
+        <p><strong>Location:</strong> Boring Road, Patna</p>
+        <p><strong>Hours:</strong> Monday to Saturday, 4 PM to 8 PM</p>
+        <a class="cta primary" href="tel:+919898956789">Call Now</a>
+        <a class="cta secondary" href="#">WhatsApp Now</a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">Bright Future Coaching Centre | Focused local learning support</div>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gupta Tax & Compliance Services</title>
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --text: #1f2937;
+      --muted: #5f6b7a;
+      --primary: #0f4c81;
+      --accent: #e8eef5;
+      --card: #ffffff;
+      --border: #d9e2ec;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+    .container { width: min(1100px, 92%); margin: 0 auto; }
+    header { background: #fff; border-bottom: 1px solid var(--border); }
+    .nav { display: flex; justify-content: space-between; align-items: center; padding: 16px 0; }
+    .brand { font-weight: 700; }
+    .cta { display: inline-block; padding: 12px 18px; border-radius: 10px; text-decoration: none; font-weight: 600; margin-right: 10px; }
+    .primary { background: var(--primary); color: #fff; }
+    .secondary { background: var(--accent); color: var(--primary); }
+    .hero { padding: 72px 0 40px; }
+    .hero h1 { font-size: clamp(2rem, 4vw, 3.2rem); line-height: 1.15; margin-bottom: 16px; }
+    .hero p { max-width: 720px; color: var(--muted); }
+    section { padding: 26px 0; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; }
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 22px; }
+    h2 { font-size: 1.7rem; margin-bottom: 10px; }
+    footer { margin-top: 36px; padding: 26px 0 50px; border-top: 1px solid var(--border); color: var(--muted); }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container nav">
+      <div class="brand">Gupta Tax & Compliance Services</div>
+      <div>
+        <a class="cta secondary" href="#contact">WhatsApp Now</a>
+        <a class="cta primary" href="#contact">Book Consultation</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <h1>Simple Tax and Compliance Support for Individuals and Businesses</h1>
+        <p>Get reliable help for income tax filing, GST, and business compliance with clear communication and practical support.</p>
+        <div style="margin-top: 24px;">
+          <a class="cta primary" href="#contact">Talk to a CA</a>
+          <a class="cta secondary" href="#services">Our Services</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="services">
+      <div class="container">
+        <h2>Services</h2>
+        <div class="grid">
+          <div class="card"><strong>Income Tax Return Filing</strong><p>Support for salaried individuals, professionals, and business owners.</p></div>
+          <div class="card"><strong>GST Registration and Filing</strong><p>Reliable assistance for GST setup, return filing, and ongoing compliance.</p></div>
+          <div class="card"><strong>Business Compliance</strong><p>Practical support for ongoing statutory and business-related filing needs.</p></div>
+          <div class="card"><strong>Bookkeeping Assistance</strong><p>Basic bookkeeping support for better financial organization.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="container grid">
+        <div class="card">
+          <h2>About Us</h2>
+          <p>Gupta Tax & Compliance Services helps individuals and MSMEs manage tax and compliance work with clarity, reliability, and timely support.</p>
+        </div>
+        <div class="card">
+          <h2>Why Clients Choose Us</h2>
+          <ul>
+            <li>Clear and practical advice</li>
+            <li>MSME-friendly service</li>
+            <li>Timely support and reminders</li>
+            <li>Easy communication on call and WhatsApp</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="container">
+        <h2>Frequently Asked Questions</h2>
+        <div class="grid">
+          <div class="card"><strong>Do you work with small business owners?</strong><p>Yes, we support local MSMEs, shop owners, and professionals.</p></div>
+          <div class="card"><strong>Can I share my query on WhatsApp first?</strong><p>Yes, you can message us and we will guide you on the next step.</p></div>
+          <div class="card"><strong>Do you handle both ITR and GST work?</strong><p>Yes, we support both personal and business tax-related requirements.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact">
+      <div class="container card">
+        <h2>Contact Us</h2>
+        <p><strong>Phone:</strong> +91 98765 12345</p>
+        <p><strong>Location:</strong> Kankarbagh, Patna</p>
+        <p><strong>Hours:</strong> Monday to Saturday, 10 AM to 7 PM</p>
+        <a class="cta primary" href="tel:+919876512345">Call Now</a>
+        <a class="cta secondary" href="#">WhatsApp Now</a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">Gupta Tax & Compliance Services | Clear tax support for local businesses</div>
+  </footer>
+</body>
+</html>
