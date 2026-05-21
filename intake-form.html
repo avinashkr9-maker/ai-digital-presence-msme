@@ -211,13 +211,13 @@
       }
 
       try {
-        const response = await fetch(FORM_ENDPOINT, {
+        await fetch(FORM_ENDPOINT, {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          mode: "no-cors",
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
           body: JSON.stringify(data)
         });
 
-        if (!response.ok) throw new Error("Submission failed");
         alert("Business details submitted successfully.");
         form.reset();
       } catch (error) {
