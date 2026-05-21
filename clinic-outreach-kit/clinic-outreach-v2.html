@@ -317,6 +317,127 @@
       color: #fff;
       box-shadow: 0 12px 22px rgba(11,123,107,0.2);
     }
+    .command-deck {
+      display: grid;
+      grid-template-columns: 1.3fr 0.7fr;
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+    .hero-deck,
+    .signal-deck {
+      border-radius: 22px;
+      border: 1px solid rgba(226,224,216,0.82);
+      overflow: hidden;
+      position: relative;
+    }
+    .hero-deck {
+      padding: 22px;
+      background:
+        radial-gradient(circle at top right, rgba(232,149,26,0.16), transparent 30%),
+        radial-gradient(circle at left center, rgba(11,123,107,0.14), transparent 32%),
+        linear-gradient(135deg, rgba(20,20,20,0.98), rgba(32,53,48,0.96));
+      color: #fff;
+      box-shadow: 0 22px 40px rgba(20,20,20,0.16);
+    }
+    .hero-kicker {
+      display: inline-flex;
+      gap: 8px;
+      align-items: center;
+      padding: 7px 11px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.08);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+    .hero-deck h3 {
+      margin: 0 0 10px;
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-size: clamp(26px, 3vw, 34px);
+      line-height: 1;
+      letter-spacing: -0.04em;
+      max-width: 520px;
+    }
+    .hero-deck p {
+      margin: 0;
+      color: rgba(255,255,255,0.74);
+      max-width: 520px;
+      line-height: 1.65;
+    }
+    .hero-mini-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 18px;
+    }
+    .hero-mini-card {
+      padding: 14px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+    .hero-mini-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: rgba(255,255,255,0.62);
+      font-weight: 700;
+    }
+    .hero-mini-value {
+      margin-top: 7px;
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-size: 20px;
+      letter-spacing: -0.03em;
+    }
+    .signal-deck {
+      padding: 18px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.96), rgba(248,246,241,0.92));
+      box-shadow: var(--shadow-soft);
+    }
+    .signal-deck h4 {
+      margin: 0 0 12px;
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-size: 20px;
+      letter-spacing: -0.03em;
+    }
+    .signal-list {
+      display: grid;
+      gap: 10px;
+    }
+    .signal-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 12px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.84);
+      border: 1px solid rgba(226,224,216,0.76);
+    }
+    .signal-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 12px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--teal-light);
+      color: var(--teal);
+      font-weight: 800;
+      flex: 0 0 auto;
+    }
+    .signal-copy strong {
+      display: block;
+      font-size: 14px;
+      margin-bottom: 3px;
+    }
+    .signal-copy span {
+      font-size: 12px;
+      color: var(--ink-muted);
+      line-height: 1.55;
+    }
     .table-wrap {
       overflow: auto;
       border: 1px solid rgba(226,224,216,0.88);
@@ -500,6 +621,7 @@
       .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .workspace { grid-template-columns: 1fr; }
       .sidebar, .detail { position: static; }
+      .command-deck { grid-template-columns: 1fr; }
     }
     @media (max-width: 640px) {
       .app { padding: 16px 14px 54px; }
@@ -512,6 +634,7 @@
       .actions { width: 100%; justify-content: stretch; }
       .actions .btn { flex: 1 1 140px; }
       .detail-meta { grid-template-columns: 1fr; }
+      .hero-mini-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -533,10 +656,10 @@
 
     <div class="config-banner" id="configBanner">
       <div>
-        <strong id="modeLabel">Mode: Local demo mode</strong>
-        <div class="mini">The cleanest setup is private local config plus shared Supabase storage, so the team gets one polished CRM without exposing keys in GitHub.</div>
+        <strong id="modeLabel">Workspace booting...</strong>
+        <div class="mini">Supabase is now baked into the workspace. The only thing you may still need once is your Apify token for one-click lead finding.</div>
       </div>
-      <button class="btn btn-primary" id="connectBtn">Connect Supabase</button>
+      <button class="btn btn-primary" id="connectBtn">Workspace settings</button>
     </div>
 
     <div class="stats">
@@ -606,6 +729,44 @@
       </div>
 
       <div class="panel main">
+        <div class="command-deck">
+          <div class="hero-deck">
+            <div class="hero-kicker">Dikhao command center</div>
+            <h3>Find, qualify, and message local clinics from one modern cockpit.</h3>
+            <p>Use the lead finder for fresh prospecting, work the queue fast, and keep follow-ups visible so no warm lead goes cold.</p>
+            <div class="hero-mini-grid">
+              <div class="hero-mini-card">
+                <div class="hero-mini-label">Best starting move</div>
+                <div class="hero-mini-value">Gurugram clinics</div>
+              </div>
+              <div class="hero-mini-card">
+                <div class="hero-mini-label">Outreach style</div>
+                <div class="hero-mini-value">Fast manual WhatsApp</div>
+              </div>
+              <div class="hero-mini-card">
+                <div class="hero-mini-label">Core promise</div>
+                <div class="hero-mini-value">Message drafts ready</div>
+              </div>
+            </div>
+          </div>
+          <div class="signal-deck">
+            <h4>What this dashboard is built for</h4>
+            <div class="signal-list">
+              <div class="signal-item">
+                <div class="signal-icon">01</div>
+                <div class="signal-copy"><strong>Prospect fast</strong><span>Find local clinics by place, filter quality quickly, and push only usable leads into the queue.</span></div>
+              </div>
+              <div class="signal-item">
+                <div class="signal-icon">02</div>
+                <div class="signal-copy"><strong>Message without friction</strong><span>Every lead comes with a ready draft, follow-up cadence, and status trail.</span></div>
+              </div>
+              <div class="signal-item">
+                <div class="signal-icon">03</div>
+                <div class="signal-copy"><strong>Stay in control</strong><span>Use the detail panel as your mini command file for notes, context, and next action.</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
         <div class="tabs">
           <button class="tab active" data-view="queue">Outreach Queue</button>
           <button class="tab" data-view="followups">Follow-ups Today</button>
@@ -656,16 +817,17 @@
       <h2 class="section-title">Supabase setup</h2>
       <div class="field">
         <label>Supabase URL</label>
-        <input id="supabaseUrl" placeholder="https://your-project.supabase.co" value="https://hawdlljwbjgdnjlqniqn.supabase.co" />
+        <input id="supabaseUrl" placeholder="https://your-project.supabase.co" value="https://hawdlljwbjgdnjlqniqn.supabase.co" readonly />
       </div>
       <div class="field">
         <label>Supabase Anon Key</label>
-        <textarea id="supabaseAnonKey" placeholder="Paste anon key"></textarea>
+        <textarea id="supabaseAnonKey" placeholder="Workspace anon key" readonly></textarea>
+        <div class="mini">Already baked into this workspace so you do not have to enter it manually.</div>
       </div>
       <div class="field">
         <label>Apify API Token</label>
         <textarea id="apifyToken" placeholder="Paste Apify API token for auto lead finder"></textarea>
-        <div class="mini">Needed for the one-click lead finder inside the CRM.</div>
+        <div class="mini">This is the only remaining token you may need to paste once, unless you want me to hardwire your real Apify token too.</div>
       </div>
       <div class="field">
         <label>Workspace slug</label>
@@ -708,7 +870,7 @@
     function loadConfig() {
       const defaults = {
         url: 'https://hawdlljwbjgdnjlqniqn.supabase.co',
-        anonKey: '',
+        anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhhd2RsbGp3YmpnZG5qbHFuaXFuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUyODEyNDUsImV4cCI6MjA5MDg1NzI0NX0.Z01OA6cPSlzM25OkfDfV7z1C3c-1DGtQ6QQYhpEEr9Y',
         apifyToken: '',
         apifyActorId: 'compass/crawler-google-places',
         apifyTaskId: '',

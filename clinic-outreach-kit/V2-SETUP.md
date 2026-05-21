@@ -33,19 +33,17 @@ This creates:
 - `crm_lead_activities`
 
 ### 3. Get project credentials
-From Supabase project settings copy:
-- anon public key
-
 From Apify copy:
 - Apify API token
 
 The project URL is already prefilled in the app:
 - `https://hawdlljwbjgdnjlqniqn.supabase.co`
 
+The Supabase anon key is already baked into this workspace build.
+
 ### 4. Best setup method: local private config file
 - Copy `supabase-config.example.js`
 - Rename it to `supabase-config.local.js`
-- Paste your anon key there
 - Paste your Apify API token there
 - Keep workspace slug as `dikhao-clinics`
 - Open `clinic-outreach-v2.html` in browser
@@ -53,7 +51,6 @@ The project URL is already prefilled in the app:
 ### 5. Fallback manual method
 - Open `clinic-outreach-v2.html` in browser
 - Click `Supabase setup`
-- Paste the anon key
 - Paste the Apify API token if you want auto lead-finding
 - keep the prefilled project URL unless you want to switch projects
 - Keep workspace slug as `dikhao-clinics` unless you want separate workspaces
