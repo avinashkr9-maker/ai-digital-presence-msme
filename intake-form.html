@@ -192,7 +192,7 @@
           </div>
         </div>
 
-        <button class="btn" type="submit">Submit Business Details</button>
+        <button class="btn" type="submit">Generate My Preview</button>
         <div class="note">This form is ready for a Google Apps Script, SheetDB, Tally, or custom endpoint. Set the endpoint inside the script before public use.</div>
       </form>
     </div>
@@ -211,17 +211,17 @@
       }
 
       try {
+        localStorage.setItem("businessPreviewData", JSON.stringify(data));
         await fetch(FORM_ENDPOINT, {
           method: "POST",
           mode: "no-cors",
           headers: { "Content-Type": "text/plain;charset=utf-8" },
           body: JSON.stringify(data)
         });
-
-        alert("Business details submitted successfully.");
-        form.reset();
+        window.location.href = "preview.html";
       } catch (error) {
-        alert("Submission failed. Please try again.");
+        localStorage.setItem("businessPreviewData", JSON.stringify(data));
+        window.location.href = "preview.html";
         console.error(error);
       }
     });
