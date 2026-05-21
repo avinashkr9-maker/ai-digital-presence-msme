@@ -6,46 +6,76 @@
   <title>Your Business Preview</title>
   <style>
     :root {
-      --bg: #f6f8fb;
+      --bg: #f5f7fb;
       --surface: #ffffff;
-      --text: #1f2937;
-      --muted: #667085;
+      --text: #142033;
+      --muted: #617086;
       --primary: #2563eb;
-      --border: #dbe4f0;
-      --soft: #eaf2ff;
+      --primary-soft: #eaf2ff;
+      --border: #d9e3f0;
+      --success: #0f9d58;
+      --dark: #0f172a;
+      --clinic: #1274c7;
+      --ca: #0f4c81;
+      --tutor: #7c4dff;
+      --salon: #d63384;
+      --gym: #17824f;
+      --boutique: #b7791f;
     }
     * { box-sizing: border-box; }
     body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
-    .topbar { background: #0f172a; color: #fff; padding: 12px 0; }
-    .container { width: min(1120px, 92%); margin: 0 auto; }
-    .topbar .container { display: flex; justify-content: space-between; gap: 16px; align-items: center; flex-wrap: wrap; }
-    .badge { display: inline-block; background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.18); padding: 7px 12px; border-radius: 999px; font-size: 0.92rem; }
+    .container { width: min(1140px, 92%); margin: 0 auto; }
+    .topbar { position: sticky; top: 0; z-index: 30; background: rgba(15, 23, 42, 0.96); color: #fff; backdrop-filter: blur(10px); border-bottom: 1px solid rgba(255,255,255,0.1); }
+    .topbar-inner { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; padding: 12px 0; }
+    .preview-badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.14); border-radius: 999px; padding: 8px 12px; font-size: 0.92rem; }
     .btn { display: inline-block; padding: 12px 18px; border-radius: 10px; text-decoration: none; font-weight: 600; border: 1px solid transparent; cursor: pointer; }
     .btn-primary { background: var(--primary); color: #fff; }
     .btn-secondary { background: #fff; color: var(--primary); border-color: #cdddff; }
-    .hero { background: linear-gradient(180deg, #fff, #f6f8fb); padding: 64px 0 32px; border-bottom: 1px solid var(--border); }
-    .hero-grid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 28px; align-items: center; }
-    .hero h1 { font-size: clamp(2.1rem, 5vw, 3.6rem); line-height: 1.08; margin: 0 0 16px; }
-    .hero p { color: var(--muted); margin: 0 0 22px; max-width: 720px; }
-    .card { background: var(--surface); border: 1px solid var(--border); border-radius: 18px; padding: 24px; box-shadow: 0 10px 28px rgba(15, 23, 42, 0.05); }
+    .btn-dark { background: var(--dark); color: #fff; }
+    .hero { padding: 64px 0 34px; position: relative; overflow: hidden; }
+    .hero::before { content: ""; position: absolute; inset: 0; background: radial-gradient(circle at top right, rgba(37,99,235,0.12), transparent 28%), radial-gradient(circle at left top, rgba(124,77,255,0.10), transparent 24%); pointer-events: none; }
+    .hero-grid { position: relative; display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 28px; align-items: center; }
+    .eyebrow { display: inline-block; margin-bottom: 14px; color: var(--primary); background: var(--primary-soft); border: 1px solid #cdddff; border-radius: 999px; padding: 7px 12px; font-size: 0.85rem; font-weight: 700; }
+    .hero h1 { font-size: clamp(2.2rem, 5vw, 4rem); line-height: 1.06; margin: 0 0 16px; }
+    .hero p { color: var(--muted); max-width: 720px; margin: 0 0 24px; }
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 24px; box-shadow: 0 14px 34px rgba(15,23,42,0.06); }
+    .mini-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin-top: 18px; }
+    .mini-stat { background: #f8fbff; border: 1px solid var(--border); border-radius: 14px; padding: 14px; }
     .section { padding: 28px 0; }
-    .section h2 { margin: 0 0 12px; font-size: 1.8rem; }
+    .section h2 { font-size: 1.85rem; margin: 0 0 12px; }
     .muted { color: var(--muted); }
     .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 18px; }
-    .service-card { background: #fff; border: 1px solid var(--border); border-radius: 16px; padding: 20px; }
-    .feature-list, .faq-list { display: grid; gap: 16px; }
-    .faq-item, .meta-card { background: #fff; border: 1px solid var(--border); border-radius: 16px; padding: 20px; }
-    .footer-band { margin: 30px 0 50px; }
-    .meta-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 18px; }
+    .service-card, .meta-card, .faq-item, .benefit-card { background: var(--surface); border: 1px solid var(--border); border-radius: 18px; padding: 20px; }
+    .service-card strong, .meta-card strong { display: block; margin-bottom: 6px; }
+    .value-band { background: linear-gradient(135deg, #0f172a, #1e293b); color: #fff; border-radius: 22px; padding: 28px; }
+    .value-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-top: 18px; }
+    .value-item { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 18px; }
+    .preview-frame { background: linear-gradient(180deg, #ffffff, #fbfdff); border: 1px solid var(--border); border-radius: 22px; padding: 18px; box-shadow: 0 16px 34px rgba(37,99,235,0.08); }
+    .browser-bar { display: flex; gap: 8px; margin-bottom: 16px; }
+    .dot { width: 10px; height: 10px; border-radius: 50%; background: #d7dee9; }
+    .mock-header { display: flex; justify-content: space-between; gap: 16px; align-items: center; padding-bottom: 14px; border-bottom: 1px solid var(--border); }
+    .mock-nav { display: flex; gap: 14px; flex-wrap: wrap; color: var(--muted); font-size: 0.95rem; }
+    .mock-hero { padding: 24px 0 10px; }
+    .mock-hero-title { font-size: 1.8rem; line-height: 1.15; margin: 0 0 10px; }
+    .mock-pill { display: inline-block; padding: 7px 12px; border-radius: 999px; background: var(--primary-soft); color: var(--primary); font-size: 0.85rem; font-weight: 600; margin-bottom: 12px; }
+    .mock-services { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 12px; margin-top: 18px; }
+    .mock-service { border: 1px solid var(--border); border-radius: 14px; padding: 14px; background: #fff; }
+    .faq-list { display: grid; gap: 16px; }
+    .cta-band { margin: 34px 0 54px; }
+    .cta-card { background: linear-gradient(135deg, #edf4ff, #ffffff); border: 1px solid #cfe0ff; border-radius: 24px; padding: 28px; box-shadow: 0 12px 28px rgba(37,99,235,0.08); }
+    .checklist { padding-left: 18px; margin: 0; }
+    .checklist li { margin-bottom: 8px; }
+    .small { font-size: 0.92rem; }
     @media (max-width: 900px) {
       .hero-grid { grid-template-columns: 1fr; }
+      .mini-grid, .mock-services { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
   <div class="topbar">
-    <div class="container">
-      <div class="badge">Preview generated from your business details</div>
+    <div class="container topbar-inner">
+      <div class="preview-badge">Preview generated from your business details</div>
       <div>
         <a class="btn btn-secondary" href="intake-form.html">Edit Details</a>
         <a class="btn btn-primary" href="#activate">Activate This Website</a>
@@ -77,78 +107,12 @@
     };
 
     const categoryConfigs = {
-      'Clinic': {
-        headline: d => `Trusted Family Healthcare in ${d.city}`,
-        subheadline: d => `Get professional consultation, easy appointment support, and patient-friendly care from ${d.businessName}.`,
-        servicesTitle: 'Our Services',
-        cta: 'Book Consultation',
-        why: ['Trusted local care', 'Easy appointment support', 'Friendly guidance', 'Convenient patient contact'],
-        faqs: [
-          ['Do I need an appointment?', 'You can call or send a WhatsApp message before visiting.'],
-          ['Do you provide routine checkups?', 'Yes, routine consultation support can be provided based on the clinic service list.'],
-          ['How can I contact the clinic?', 'You can contact the clinic by phone or WhatsApp during working hours.']
-        ]
-      },
-      'CA / Accountant': {
-        headline: d => `Simple Tax and Compliance Support in ${d.city}`,
-        subheadline: d => `${d.businessName} helps individuals and businesses with tax, GST, and compliance support in a practical and easy-to-understand way.`,
-        servicesTitle: 'Core Services',
-        cta: 'Book Consultation',
-        why: ['Clear advice', 'MSME-friendly support', 'Timely service', 'Easy client communication'],
-        faqs: [
-          ['Do you work with small businesses?', 'Yes, this setup is designed for clear local business communication and enquiry flow.'],
-          ['Can clients contact on WhatsApp?', 'Yes, call and WhatsApp contact can be highlighted clearly.'],
-          ['Can this support tax and GST services?', 'Yes, services can be presented clearly on the website.']
-        ]
-      },
-      'Tutor / Coaching': {
-        headline: d => `Better Learning and Stronger Results in ${d.city}`,
-        subheadline: d => `${d.businessName} helps students learn with confidence through simple teaching, regular practice, and easy parent communication.`,
-        servicesTitle: 'Courses and Support',
-        cta: 'Enquire Now',
-        why: ['Clear teaching', 'Small batch feel', 'Parent-friendly communication', 'Simple enquiry flow'],
-        faqs: [
-          ['Which classes can be listed?', 'The website can clearly show classes, subjects, and batch timing details.'],
-          ['Can parents enquire on WhatsApp?', 'Yes, direct enquiry via call or WhatsApp can be the main action.'],
-          ['Can demo classes be promoted?', 'Yes, demo class CTA can be included clearly.']
-        ]
-      },
-      'Salon': {
-        headline: d => `Professional Beauty and Grooming Services in ${d.city}`,
-        subheadline: d => `${d.businessName} can showcase beauty, grooming, and appointment support in a simple and polished way.`,
-        servicesTitle: 'Popular Services',
-        cta: 'Book Appointment',
-        why: ['Clean service presentation', 'Easy booking support', 'WhatsApp-friendly enquiries', 'Professional local look'],
-        faqs: [
-          ['Can appointments be requested online?', 'Yes, the website can push users to call or message on WhatsApp.'],
-          ['Can service photos be added later?', 'Yes, the site can start simple and improve with new photos.'],
-          ['Can bridal or event services be shown?', 'Yes, premium service sections can be highlighted.']
-        ]
-      },
-      'Gym': {
-        headline: d => `Train Better with ${d.businessName}`,
-        subheadline: d => `Show memberships, trainer support, and enquiry options clearly so more local people can discover your gym in ${d.city}.`,
-        servicesTitle: 'Training Support',
-        cta: 'Join Now',
-        why: ['Stronger local visibility', 'Clear membership enquiry path', 'Simple class and trainer presentation', 'Easy lead capture'],
-        faqs: [
-          ['Can membership plans be shown?', 'Yes, pricing or plan highlights can be added clearly.'],
-          ['Can users ask for trial visits?', 'Yes, trial enquiry CTA can be added.'],
-          ['Can trainer support be highlighted?', 'Yes, personal training or class support can be shown.']
-        ]
-      },
-      'Boutique': {
-        headline: d => `Stylish Fashion Discovery in ${d.city}`,
-        subheadline: d => `${d.businessName} can showcase collections, easy WhatsApp enquiries, and a more polished online brand presence.`,
-        servicesTitle: 'Collections and Support',
-        cta: 'Shop Enquiry',
-        why: ['Stronger brand presentation', 'Easy WhatsApp product enquiry', 'Better local trust', 'Simple showcase of collections'],
-        faqs: [
-          ['Can collection photos be added?', 'Yes, collection images and highlights can be added easily.'],
-          ['Can customers enquire about sizes or availability?', 'Yes, direct enquiry flow can be built around WhatsApp or call.'],
-          ['Can offers or new arrivals be promoted?', 'Yes, special collection or seasonal sections can be shown.']
-        ]
-      }
+      'Clinic': { color: 'var(--clinic)', headline: d => `Trusted Family Healthcare in ${d.city}`, subheadline: d => `Get professional consultation, easy appointment support, and patient-friendly care from ${d.businessName}.`, servicesTitle: 'Our Services', cta: 'Book Consultation', why: ['Trusted local care', 'Easy appointment support', 'Friendly guidance', 'Convenient patient contact'], faqs: [['Do I need an appointment?', 'You can call or send a WhatsApp message before visiting.'], ['Do you provide routine checkups?', 'Yes, routine consultation support can be provided based on the clinic service list.'], ['How can I contact the clinic?', 'You can contact the clinic by phone or WhatsApp during working hours.']] },
+      'CA / Accountant': { color: 'var(--ca)', headline: d => `Simple Tax and Compliance Support in ${d.city}`, subheadline: d => `${d.businessName} helps individuals and businesses with tax, GST, and compliance support in a practical and easy-to-understand way.`, servicesTitle: 'Core Services', cta: 'Book Consultation', why: ['Clear advice', 'MSME-friendly support', 'Timely service', 'Easy client communication'], faqs: [['Do you work with small businesses?', 'Yes, this setup is designed for clear local business communication and enquiry flow.'], ['Can clients contact on WhatsApp?', 'Yes, call and WhatsApp contact can be highlighted clearly.'], ['Can this support tax and GST services?', 'Yes, services can be presented clearly on the website.']] },
+      'Tutor / Coaching': { color: 'var(--tutor)', headline: d => `Better Learning and Stronger Results in ${d.city}`, subheadline: d => `${d.businessName} helps students learn with confidence through simple teaching, regular practice, and easy parent communication.`, servicesTitle: 'Courses and Support', cta: 'Enquire Now', why: ['Clear teaching', 'Small batch feel', 'Parent-friendly communication', 'Simple enquiry flow'], faqs: [['Which classes can be listed?', 'The website can clearly show classes, subjects, and batch timing details.'], ['Can parents enquire on WhatsApp?', 'Yes, direct enquiry via call or WhatsApp can be the main action.'], ['Can demo classes be promoted?', 'Yes, demo class CTA can be included clearly.']] },
+      'Salon': { color: 'var(--salon)', headline: d => `Professional Beauty and Grooming Services in ${d.city}`, subheadline: d => `${d.businessName} can showcase beauty, grooming, and appointment support in a simple and polished way.`, servicesTitle: 'Popular Services', cta: 'Book Appointment', why: ['Clean service presentation', 'Easy booking support', 'WhatsApp-friendly enquiries', 'Professional local look'], faqs: [['Can appointments be requested online?', 'Yes, the website can push users to call or message on WhatsApp.'], ['Can service photos be added later?', 'Yes, the site can start simple and improve with new photos.'], ['Can bridal or event services be shown?', 'Yes, premium service sections can be highlighted.']] },
+      'Gym': { color: 'var(--gym)', headline: d => `Train Better with ${d.businessName}`, subheadline: d => `Show memberships, trainer support, and enquiry options clearly so more local people can discover your gym in ${d.city}.`, servicesTitle: 'Training Support', cta: 'Join Now', why: ['Stronger local visibility', 'Clear membership enquiry path', 'Simple class and trainer presentation', 'Easy lead capture'], faqs: [['Can membership plans be shown?', 'Yes, pricing or plan highlights can be added clearly.'], ['Can users ask for trial visits?', 'Yes, trial enquiry CTA can be added.'], ['Can trainer support be highlighted?', 'Yes, personal training or class support can be shown.']] },
+      'Boutique': { color: 'var(--boutique)', headline: d => `Stylish Fashion Discovery in ${d.city}`, subheadline: d => `${d.businessName} can showcase collections, easy WhatsApp enquiries, and a more polished online brand presence.`, servicesTitle: 'Collections and Support', cta: 'Shop Enquiry', why: ['Stronger brand presentation', 'Easy WhatsApp product enquiry', 'Better local trust', 'Simple showcase of collections'], faqs: [['Can collection photos be added?', 'Yes, collection images and highlights can be added easily.'], ['Can customers enquire about sizes or availability?', 'Yes, direct enquiry flow can be built around WhatsApp or call.'], ['Can offers or new arrivals be promoted?', 'Yes, special collection or seasonal sections can be shown.']] }
     };
 
     function loadData() {
@@ -163,38 +127,65 @@
 
     function serviceList(data) {
       const top = (data.topServices || '').split(/\n|,/).map(s => s.trim()).filter(Boolean);
-      if (top.length) return top.slice(0, 6);
-      return ['Service One', 'Service Two', 'Service Three'];
+      return top.length ? top.slice(0, 6) : ['Service One', 'Service Two', 'Service Three'];
+    }
+
+    function injectColor(color) {
+      document.documentElement.style.setProperty('--primary', color);
+      document.documentElement.style.setProperty('--primary-soft', color.replace('var(','').includes('--') ? '#eaf2ff' : '#eaf2ff');
     }
 
     function render() {
       const data = loadData();
       const config = categoryConfigs[data.category] || categoryConfigs['Clinic'];
       const services = serviceList(data);
+      injectColor(config.color);
       const primaryGoal = data.goal || 'Calls';
       const root = document.getElementById('previewRoot');
       root.innerHTML = `
         <section class="hero">
           <div class="container hero-grid">
             <div>
-              <div class="badge" style="background: var(--soft); color: var(--primary); border: 1px solid #cdddff;">${data.category || 'Business'} Preview</div>
+              <div class="eyebrow">${data.category || 'Business'} Preview</div>
               <h1>${config.headline(data)}</h1>
               <p>${config.subheadline(data)}</p>
               <div>
                 <a class="btn btn-primary" href="#activate">Activate This Website</a>
-                <a class="btn btn-secondary" href="#contact">View Contact Section</a>
+                <a class="btn btn-secondary" href="#preview-frame">See Preview Layout</a>
+              </div>
+              <div class="mini-grid">
+                <div class="mini-stat"><strong>${data.businessName}</strong><div class="small muted">Business name used in preview</div></div>
+                <div class="mini-stat"><strong>${data.city}</strong><div class="small muted">Location shown to customers</div></div>
+                <div class="mini-stat"><strong>${primaryGoal}</strong><div class="small muted">Primary enquiry action</div></div>
+                <div class="mini-stat"><strong>${data.timings}</strong><div class="small muted">Business hours displayed</div></div>
               </div>
             </div>
-            <div class="card">
-              <h3 style="margin-top:0;">Preview Summary</h3>
-              <p class="muted">This sample preview has been generated from your business details.</p>
-              <ul>
-                <li><strong>Business:</strong> ${data.businessName}</li>
-                <li><strong>Category:</strong> ${data.category}</li>
-                <li><strong>Location:</strong> ${data.city}</li>
-                <li><strong>Main goal:</strong> ${primaryGoal}</li>
-                <li><strong>Hours:</strong> ${data.timings}</li>
-              </ul>
+            <div class="preview-frame" id="preview-frame">
+              <div class="browser-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+              <div class="mock-header">
+                <strong>${data.businessName}</strong>
+                <div class="mock-nav"><span>Home</span><span>About</span><span>Services</span><span>Contact</span></div>
+              </div>
+              <div class="mock-hero">
+                <div class="mock-pill">Live preview based on your details</div>
+                <h2 class="mock-hero-title">${config.headline(data)}</h2>
+                <p class="muted">${config.subheadline(data)}</p>
+                <div class="mock-services">
+                  ${services.slice(0,4).map(item => `<div class="mock-service"><strong>${item}</strong><div class="small muted">Visible as a service section</div></div>`).join('')}
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section">
+          <div class="container value-band">
+            <h2 style="margin-top:0;">What this preview is showing you</h2>
+            <p style="color: rgba(255,255,255,0.82); margin: 0;">This is a personalized sample website generated from your business details. The final live version can be polished further with branding, photos, and complete business sections.</p>
+            <div class="value-grid">
+              <div class="value-item"><strong>Customers can trust you faster</strong><p class="small" style="color: rgba(255,255,255,0.78);">A clean online presence makes your business look more credible.</p></div>
+              <div class="value-item"><strong>Customers can contact you easily</strong><p class="small" style="color: rgba(255,255,255,0.78);">Calls and WhatsApp actions become clear and direct.</p></div>
+              <div class="value-item"><strong>Your services become easier to understand</strong><p class="small" style="color: rgba(255,255,255,0.78);">People quickly see what you offer and why they should choose you.</p></div>
             </div>
           </div>
         </section>
@@ -202,28 +193,25 @@
         <section class="section">
           <div class="container">
             <h2>${config.servicesTitle}</h2>
-            <p class="muted">These sections are adapted from the details you entered.</p>
+            <p class="muted">These service blocks are adapted from the top services you entered.</p>
             <div class="grid">
-              ${services.map(item => `<div class="service-card"><strong>${item}</strong><p class="muted">A clear service section can be created for this offer inside your website.</p></div>`).join('')}
+              ${services.map(item => `<div class="service-card"><strong>${item}</strong><p class="muted">This service can be clearly shown with local trust-building copy and direct contact actions.</p></div>`).join('')}
             </div>
           </div>
         </section>
 
         <section class="section">
-          <div class="container">
+          <div class="container grid">
             <div class="card">
               <h2>About ${data.businessName}</h2>
               <p>${data.services || defaults.services}</p>
-              <p><strong>Why customers choose this business:</strong> ${data.usp || defaults.usp}</p>
+              <p><strong>Why customers may choose this business:</strong> ${data.usp || defaults.usp}</p>
             </div>
-          </div>
-        </section>
-
-        <section class="section">
-          <div class="container">
-            <h2>Why this website can work for your business</h2>
-            <div class="grid">
-              ${config.why.map(item => `<div class="meta-card"><strong>${item}</strong><p class="muted">This can be shown clearly to help customers trust and contact your business faster.</p></div>`).join('')}
+            <div class="card">
+              <h2>Why this can convert better</h2>
+              <ul class="checklist">
+                ${config.why.map(item => `<li>${item}</li>`).join('')}
+              </ul>
             </div>
           </div>
         </section>
@@ -237,24 +225,32 @@
           </div>
         </section>
 
-        <section class="section" id="contact">
-          <div class="container meta-grid">
-            <div class="meta-card"><strong>Business Name</strong><p class="muted">${data.businessName}</p></div>
-            <div class="meta-card"><strong>Location</strong><p class="muted">${data.city}</p></div>
-            <div class="meta-card"><strong>Phone</strong><p class="muted">${data.phone}</p></div>
-            <div class="meta-card"><strong>WhatsApp</strong><p class="muted">${data.whatsapp}</p></div>
-            <div class="meta-card"><strong>Hours</strong><p class="muted">${data.timings}</p></div>
-            <div class="meta-card"><strong>Main Audience</strong><p class="muted">${data.customers}</p></div>
+        <section class="section">
+          <div class="container">
+            <h2>Business Details Used in This Preview</h2>
+            <div class="grid">
+              <div class="meta-card"><strong>Business Name</strong><p class="muted">${data.businessName}</p></div>
+              <div class="meta-card"><strong>Location</strong><p class="muted">${data.city}</p></div>
+              <div class="meta-card"><strong>Phone</strong><p class="muted">${data.phone}</p></div>
+              <div class="meta-card"><strong>WhatsApp</strong><p class="muted">${data.whatsapp}</p></div>
+              <div class="meta-card"><strong>Hours</strong><p class="muted">${data.timings}</p></div>
+              <div class="meta-card"><strong>Target Customers</strong><p class="muted">${data.customers}</p></div>
+            </div>
           </div>
         </section>
 
-        <section class="footer-band" id="activate">
-          <div class="container card">
-            <h2>Activate your website</h2>
-            <p class="muted">This is a generated preview based on your business details. The final live website can include your complete business branding, contact flow, and polished category layout.</p>
+        <section class="cta-band" id="activate">
+          <div class="container cta-card">
+            <h2 style="margin-top:0;">Activate your website</h2>
+            <p class="muted">You now have a personalized sample preview. The next step is activating the final version with polished content, full layout, and a proper live setup for your business.</p>
+            <div class="grid" style="margin-bottom: 18px;">
+              <div class="benefit-card"><strong>Included in activation</strong><p class="muted">Website setup, business copy, category structure, and contact-ready flow.</p></div>
+              <div class="benefit-card"><strong>Built for local discovery</strong><p class="muted">Your website can support Google visibility, credibility, and easier customer contact.</p></div>
+              <div class="benefit-card"><strong>Designed for simple execution</strong><p class="muted">Start fast, then improve with photos, offers, and more polish.</p></div>
+            </div>
             <div>
-              <a class="btn btn-primary" href="intake-form.html">Update Details</a>
-              <a class="btn btn-secondary" href="index.html">Back to Main Site</a>
+              <a class="btn btn-primary" href="index.html">Continue to Activation</a>
+              <a class="btn btn-secondary" href="intake-form.html">Update My Details</a>
             </div>
           </div>
         </section>
