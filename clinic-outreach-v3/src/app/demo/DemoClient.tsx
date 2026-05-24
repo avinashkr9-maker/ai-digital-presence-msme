@@ -315,6 +315,216 @@ select{appearance:none;cursor:pointer;background-image:url("data:image/svg+xml,%
 .plan-note{font-size:12px;color:var(--ink3)}
 /* RESPONSIVE */
 @media(max-width:860px){.page{grid-template-columns:1fr;gap:24px}.form-panel{position:static}}
+
+
+/* ============================================================
+   ENHANCED PREVIEW — makes the generated site look like a
+   real, polished website instead of a flat form result.
+   ============================================================ */
+
+.site-preview {
+  box-shadow: 0 30px 70px rgba(0,0,0,0.16);
+  border: 1px solid #d8d6cf !important;
+}
+
+/* HERO — gradient, depth, decorative glow */
+.site-hero {
+  padding: 64px 36px 56px !important;
+  background:
+    radial-gradient(ellipse 70% 80% at 50% 0%, rgba(11,123,107,0.14) 0%, transparent 70%),
+    radial-gradient(ellipse 50% 60% at 85% 100%, rgba(232,149,26,0.12) 0%, transparent 70%),
+    linear-gradient(180deg, #ffffff 0%, #f7f6f2 100%) !important;
+  border-bottom: 1px solid #ececec;
+}
+#site-badge {
+  background: #fff !important;
+  border: 1px solid rgba(11,123,107,0.25);
+  box-shadow: 0 4px 14px rgba(11,123,107,0.10);
+  letter-spacing: 0.3px;
+}
+.site-name {
+  font-size: 38px !important;
+  background: linear-gradient(135deg, #141414 0%, #0B7B6B 130%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.site-tagline { font-size: 16px !important; max-width: 440px !important; }
+.site-btn {
+  box-shadow: 0 8px 22px rgba(11,123,107,0.32);
+  padding: 13px 28px !important;
+  transition: transform .15s ease;
+}
+.site-btn:hover { transform: translateY(-2px); }
+.site-btn-outline { background: #fff !important; }
+
+/* SECTIONS — more breathing room, soft headings */
+.site-section { padding: 44px 36px !important; }
+.site-section-title {
+  font-size: 22px !important;
+  position: relative;
+  display: inline-block;
+  padding-bottom: 10px;
+  margin-bottom: 22px !important;
+}
+.site-section-title::after {
+  content: "";
+  position: absolute;
+  left: 0; bottom: 0;
+  width: 38px; height: 3px;
+  background: #E8951A;
+  border-radius: 2px;
+}
+
+/* SERVICE CARDS — real cards: white, shadow, icon, hover lift */
+.services-grid { gap: 16px !important; }
+.svc-card {
+  background: #fff !important;
+  border: 1px solid #ececec;
+  border-radius: 14px !important;
+  padding: 22px 20px !important;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.05);
+  transition: transform .16s ease, box-shadow .16s ease;
+  position: relative;
+}
+.svc-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 14px 30px rgba(0,0,0,0.10);
+}
+.svc-card::before {
+  content: "";
+  display: block;
+  width: 38px; height: 38px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, rgba(11,123,107,0.14), rgba(11,123,107,0.06));
+  margin-bottom: 12px;
+}
+.svc-name { font-size: 15px !important; }
+.svc-desc { font-size: 12.5px !important; }
+.svc-price {
+  display: inline-block;
+  margin-top: 10px !important;
+  background: rgba(11,123,107,0.08);
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px !important;
+}
+
+/* ABOUT — softer block */
+.about-text {
+  font-size: 14.5px !important;
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px 22px;
+  border: 1px solid #e6f0ee;
+}
+
+/* CONTACT rows — cleaner */
+.contact-row {
+  background: #fff;
+  border: 1px solid #ececec;
+  border-radius: 10px;
+  padding: 11px 14px;
+  margin-bottom: 8px;
+  display: flex; align-items: center; gap: 10px;
+  font-size: 13.5px;
+}
+
+/* FOOTER — richer */
+.site-footer {
+  background: linear-gradient(135deg, #141414, #213631) !important;
+  color: #fff;
+  padding: 32px !important;
+  text-align: center;
+}
+.site-footer-name {
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-size: 20px; font-weight: 800; color: #fff;
+}
+.site-footer-tag { color: rgba(255,255,255,0.6); font-size: 13px; margin-top: 4px; }
+
+@media (max-width: 560px) {
+  .site-hero { padding: 44px 22px 38px !important; }
+  .site-name { font-size: 28px !important; }
+  .site-section { padding: 32px 22px !important; }
+  .services-grid { grid-template-columns: 1fr !important; }
+}
+
+
+/* ============================================================
+   CATEGORY THEMES — preview re-themes itself by data-cat.
+   Each category gets its own accent colour & hero mood.
+   ============================================================ */
+
+/* default accent vars on the preview */
+#preview-state { --acc: #0B7B6B; --acc-soft: rgba(11,123,107,0.12); }
+
+/* --- per category accent --- */
+#preview-state[data-cat="clinic"]     { --acc:#0B7B6B; --acc-soft:rgba(11,123,107,0.12); }
+#preview-state[data-cat="dental"]     { --acc:#0E8AA8; --acc-soft:rgba(14,138,168,0.12); }
+#preview-state[data-cat="tutor"]      { --acc:#2563EB; --acc-soft:rgba(37,99,235,0.12); }
+#preview-state[data-cat="salon"]      { --acc:#C2185B; --acc-soft:rgba(194,24,91,0.12); }
+#preview-state[data-cat="ca"]         { --acc:#1E3A5F; --acc-soft:rgba(30,58,95,0.12); }
+#preview-state[data-cat="gym"]        { --acc:#E8951A; --acc-soft:rgba(232,149,26,0.14); }
+#preview-state[data-cat="restaurant"] { --acc:#C0392B; --acc-soft:rgba(192,57,43,0.12); }
+#preview-state[data-cat="boutique"]   { --acc:#7B2D8E; --acc-soft:rgba(123,45,142,0.12); }
+#preview-state[data-cat="pharmacy"]   { --acc:#159957; --acc-soft:rgba(21,153,87,0.12); }
+#preview-state[data-cat="lawyer"]     { --acc:#3E2723; --acc-soft:rgba(62,39,35,0.12); }
+#preview-state[data-cat="mechanic"]   { --acc:#37474F; --acc-soft:rgba(55,71,79,0.12); }
+#preview-state[data-cat="other"]      { --acc:#0B7B6B; --acc-soft:rgba(11,123,107,0.12); }
+
+/* hero glow uses the accent */
+#preview-state[data-cat] .site-hero {
+  background:
+    radial-gradient(ellipse 70% 80% at 50% 0%, var(--acc-soft) 0%, transparent 70%),
+    radial-gradient(ellipse 50% 60% at 85% 100%, var(--acc-soft) 0%, transparent 70%),
+    linear-gradient(180deg, #ffffff 0%, #f7f6f2 100%) !important;
+}
+/* badge + name gradient + underline + price chip + icon all follow accent */
+#preview-state[data-cat] #site-badge {
+  color: var(--acc) !important;
+  border-color: var(--acc) !important;
+}
+#preview-state[data-cat] .site-name {
+  background: linear-gradient(135deg, #141414 0%, var(--acc) 130%);
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+#preview-state[data-cat] .site-section-title::after { background: var(--acc); }
+#preview-state[data-cat] .svc-card::before {
+  background: linear-gradient(135deg, var(--acc-soft), var(--acc-soft));
+}
+#preview-state[data-cat] .svc-price {
+  color: var(--acc) !important;
+  background: var(--acc-soft);
+}
+#preview-state[data-cat] .site-btn {
+  background: var(--acc) !important;
+  box-shadow: 0 8px 22px var(--acc-soft);
+}
+#preview-state[data-cat] .about-text { border-color: var(--acc-soft); }
+#preview-state[data-cat] .site-footer {
+  background: linear-gradient(135deg, #141414, var(--acc)) !important;
+}
+
+/* category-specific hero button label (swaps the "Book appointment" text) */
+#preview-state[data-cat] .site-btn { font-size: 0 !important; }
+#preview-state[data-cat] .site-btn::after { font-size: 14px; }
+#preview-state[data-cat="clinic"]     .site-btn::after { content: "Book Appointment"; }
+#preview-state[data-cat="dental"]     .site-btn::after { content: "Book Appointment"; }
+#preview-state[data-cat="tutor"]      .site-btn::after { content: "Enquire Now"; }
+#preview-state[data-cat="salon"]      .site-btn::after { content: "Book a Slot"; }
+#preview-state[data-cat="ca"]         .site-btn::after { content: "Get a Consultation"; }
+#preview-state[data-cat="gym"]        .site-btn::after { content: "Start Free Trial"; }
+#preview-state[data-cat="restaurant"] .site-btn::after { content: "See Menu"; }
+#preview-state[data-cat="boutique"]   .site-btn::after { content: "Visit Store"; }
+#preview-state[data-cat="pharmacy"]   .site-btn::after { content: "Order on WhatsApp"; }
+#preview-state[data-cat="lawyer"]     .site-btn::after { content: "Book Consultation"; }
+#preview-state[data-cat="mechanic"]   .site-btn::after { content: "Book a Service"; }
+#preview-state[data-cat="other"]      .site-btn::after { content: "Contact Us"; }
+
+/* keep the outline button's label intact (only style the solid one above) */
+#preview-state[data-cat] .site-btn-outline { font-size: 14px !important; }
 `;
 
 const DEMO_JS = `
@@ -537,6 +747,9 @@ async function generate() {
   document.getElementById('loading-state').classList.add('show');
 
   const catLabel = (categoryMeta[cat] || categoryMeta.other).label;
+
+  // Apply the category theme to the preview (re-themes hero, buttons, accents).
+  document.getElementById('preview-state').setAttribute('data-cat', cat || 'other');
 
   let step = 0;
   const stepTimer = setInterval(() => {
