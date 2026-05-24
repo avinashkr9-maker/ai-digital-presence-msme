@@ -1,4 +1,16 @@
-export default function LoginPage() {
+type LoginPageProps = {
+  searchParams: Promise<{ error?: string }>;
+};
+
+export default async function LoginPage({ searchParams }: LoginPageProps) {
+  const { error } = await searchParams;
+  const errorMessage =
+    error === "invalid"
+      ? "Incorrect passcode. Please try again."
+      : error === "not_configured"
+        ? "Login is not configured. Set LOGIN_PASSCODE and SESSION_SECRET in environment variables."
+        : "";
+
   return (
     <main className="min-h-screen px-6 py-10 text-neutral-900">
       <div className="mx-auto grid min-h-[88vh] max-w-6xl gap-8 rounded-[34px] border border-white/70 bg-white/70 p-8 shadow-[0_30px_80px_rgba(0,0,0,0.08)] backdrop-blur lg:grid-cols-[0.95fr_1.05fr] xl:p-12">
@@ -37,6 +49,12 @@ export default function LoginPage() {
             <p className="mt-3 text-sm leading-7 text-neutral-600">
               For now use the temporary passcode login. In the real hosted version this becomes email login with Supabase auth.
             </p>
+
+            {errorMessage ? (
+              <div className="mt-6 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-semibold leading-6 text-red-800">
+                {errorMessage}
+              </div>
+            ) : null}
 
             <form action="/api/auth/demo-login" method="post" className="mt-8 space-y-4">
               <div>

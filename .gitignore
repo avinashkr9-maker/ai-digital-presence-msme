@@ -1,2 +1,3 @@
 clinic-outreach-kit/supabase-config.local.js
 clinic-outreach-kit/backend/.env
+.DS_Store
