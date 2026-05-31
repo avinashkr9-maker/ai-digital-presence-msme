@@ -3,6 +3,7 @@ import { hasSession } from "@/lib/session";
 import { getLeads, computeStats } from "@/lib/leads";
 import FindLeadsPanel from "./FindLeadsPanel";
 import LeadsTable from "./LeadsTable";
+import DailyTenPanel from "./DailyTenPanel";
 
 // Always fetch fresh data on each visit.
 export const dynamic = "force-dynamic";
@@ -67,6 +68,7 @@ export default async function DashboardPage() {
           </div>
 
           <FindLeadsPanel />
+<DailyTenPanel leads={leads} />
 
           <LeadsTable leads={leads} />
         </section>
